@@ -24,7 +24,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Collection<Team> sortTeamsByPoints(Long idLeague) {
-        Optional<League> league = leagueRepository.findById(idLeague);
+        Optional<League> league = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
         if (league.isPresent()) {
             Set<Team> teamSet = league.get().getTeams();

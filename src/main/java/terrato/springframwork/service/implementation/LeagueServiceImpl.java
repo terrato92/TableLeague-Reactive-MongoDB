@@ -33,7 +33,7 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public League getLeagueById(Long idLeague) {
-        Optional<League> leagueOptional = leagueRepository.findById(idLeague);
+        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
         League league = leagueOptional.get();
         return league;
@@ -46,7 +46,7 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public void deleteLeagueById(Long idLeague) {
-        Optional<League> leagueOptional = leagueRepository.findById(idLeague);
+        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
         League league1 = leagueOptional.get();
         leagueRepository.delete(league1);
     }

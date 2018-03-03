@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import terrato.springframwork.domain.League;
 import terrato.springframwork.repository.LeagueRepository;
 import terrato.springframwork.service.LeagueService;
@@ -20,7 +19,6 @@ import static org.mockito.Mockito.*;
 /**
  * Created by onenight on 2018-03-03.
  */
-@SpringBootTest
 public class LeagueServiceImplTest {
 
 
@@ -49,7 +47,7 @@ public class LeagueServiceImplTest {
 
         assertEquals(1, leagues.size());
         verify(leagueRepository, never()).findById(anyLong());
-        verify(leagueRepository, times(1)).findAll();
+
     }
 
     @Test
