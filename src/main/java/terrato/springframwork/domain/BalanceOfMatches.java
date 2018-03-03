@@ -20,7 +20,7 @@ public class BalanceOfMatches {
     private int wins = 0;
 
 //    @Column(table = "league", name = "defeat")
-    private int defeat = 0;
+    private int defeats = 0;
 
 //    @Column(table = "league", name = "draws")
     private int draws = 0;
