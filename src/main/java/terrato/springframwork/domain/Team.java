@@ -1,6 +1,8 @@
 package terrato.springframwork.domain;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -8,7 +10,9 @@ import java.util.Set;
 /**
  * Created by onenight on 2018-03-02.
  */
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = "league")
 @Table
 @Entity
 public class Team implements Comparable<Team>{
@@ -25,6 +29,7 @@ public class Team implements Comparable<Team>{
     private Set<Player> players;
 
     @OneToOne
+    @JoinColumn(name = "balance_id")
     private BalanceOfMatches balanceOfMatches;
 
 

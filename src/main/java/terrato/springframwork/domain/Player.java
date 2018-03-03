@@ -1,13 +1,17 @@
 package terrato.springframwork.domain;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 /**
  * Created by onenight on 2018-03-02.
  */
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = "team")
 @Table
 @Entity
 public class Player {
