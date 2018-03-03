@@ -17,7 +17,7 @@ public class Team implements Comparable<Team>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "team_name")
     private String name;
 
 

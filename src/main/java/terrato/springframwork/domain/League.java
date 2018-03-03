@@ -19,6 +19,7 @@ public class League {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "league_name")
     private final String NAME = "Premier League";
 
     @Size(min = 19, max = 22)
