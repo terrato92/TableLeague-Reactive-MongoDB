@@ -36,7 +36,7 @@ public class LeagueController {
     public String showLeagueById(@PathVariable String id, Model model) {
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(id)));
 
-        return "league/" + id + "show";
+        return "league/" + id + "/show";
     }
 
     @RequestMapping("league/new")
@@ -55,7 +55,7 @@ public class LeagueController {
 
     @PostMapping
     @RequestMapping("league/{id}/update")
-    public String saveOrUpdateLeague(@Valid @ModelAttribute ("league") League league, BindingResult bindingResult){
+    public String saveOrUpdateLeague(@Valid @ModelAttribute("league") League league, BindingResult bindingResult){
 
         if (bindingResult.hasErrors()){
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
