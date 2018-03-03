@@ -25,7 +25,6 @@ public class Team implements Comparable<Team>{
     private Set<Player> players;
 
     @OneToOne
-    @JoinColumn(name = "balance_of_matches_id")
     private BalanceOfMatches balanceOfMatches;
 
 

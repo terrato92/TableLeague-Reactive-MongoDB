@@ -23,7 +23,7 @@ public class League {
     private final String NAME = "Premier League";
 
     @Size(min = 19, max = 22)
-    @OneToMany(mappedBy = "league")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "league")
     private Set<Team> teams = new HashSet<>();
 
     @Lob

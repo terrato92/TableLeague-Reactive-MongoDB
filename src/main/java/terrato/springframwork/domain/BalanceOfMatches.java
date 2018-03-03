@@ -15,13 +15,17 @@ public class BalanceOfMatches {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long balance_id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "team_balance",
+    joinColumns = {@JoinColumn(name = "balance_id")},
+    inverseJoinColumns = {@JoinColumn(name = "team_id")})
+    private Team team;
 
     private int wins = 0;
 
-//    @Column(table = "league", name = "defeat")
     private int defeats = 0;
 
-//    @Column(table = "league", name = "draws")
     private int draws = 0;
 }
