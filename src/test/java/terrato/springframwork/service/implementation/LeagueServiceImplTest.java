@@ -46,7 +46,7 @@ public class LeagueServiceImplTest {
         when(leagueRepository.findAll()).thenReturn(leagues);
 
         assertEquals(1, leagues.size());
-        verify(leagueRepository, never()).findById(anyLong());
+        verify(leagueRepository, never()).findOne(anyLong());
 
     }
 
@@ -57,12 +57,12 @@ public class LeagueServiceImplTest {
 
         Optional<League> leagueOptional = Optional.of(league);
 
-        when(leagueRepository.findById(anyLong())).thenReturn(leagueOptional);
+        when(leagueRepository.findOne(anyLong())).thenReturn(leagueOptional.get());
 
         League returnedLeague = leagueService.getLeagueById(2L);
 
         assertNotNull("NULL returned", returnedLeague);
-        verify(leagueRepository, times(1)).findById(anyLong());
+        verify(leagueRepository, times(1)).findOne(anyLong());
         verify(leagueRepository, never()).findAll();
 
 
@@ -79,9 +79,9 @@ public class LeagueServiceImplTest {
 
     @Test
     public void deleteLeagueById() throws Exception {
-        leagueRepository.deleteById(anyLong());
+        leagueRepository.delete(anyLong());
 
-        verify(leagueRepository, times(1)).deleteById(anyLong());
+        verify(leagueRepository, times(1)).delete(anyLong());
     }
 
 }
