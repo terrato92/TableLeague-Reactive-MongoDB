@@ -12,6 +12,7 @@ import terrato.springframwork.service.DefeatService;
 import terrato.springframwork.service.DrawService;
 import terrato.springframwork.service.WinService;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -48,18 +49,23 @@ public class BalanceOfMatchesImplTest {
         when(teamRepository.findOne(anyLong())).thenReturn(team);
 
         winService.winMatch(team.getId());
+
+        assertEquals(1, team.getBalanceOfMatches().getWins());
     }
 
     @Test
     public void drawMatch() throws Exception {
+        BalanceOfMatches balanceOfMatches = new BalanceOfMatches();
+        balanceOfMatches.setBalance_id(1L);
         Team team = new Team();
         team.setId(1L);
-        team.setBalanceOfMatches(new BalanceOfMatches());
+        team.setBalanceOfMatches(balanceOfMatches);
 
         when(teamRepository.findOne(anyLong())).thenReturn(team);
 
         drawService.drawMatch(team.getId());
 
+        assertEquals(1, team.getBalanceOfMatches().getDraws());
     }
 
     @Test
@@ -71,6 +77,9 @@ public class BalanceOfMatchesImplTest {
         when(teamRepository.findOne(anyLong())).thenReturn(team);
 
         defeatService.defeatMatch(team.getId());
+
+        assertEquals(1, team.getBalanceOfMatches().getDefeats());
+
     }
 
 }

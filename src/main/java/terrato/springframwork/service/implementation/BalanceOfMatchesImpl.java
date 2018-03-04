@@ -25,7 +25,7 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
     }
 
     @Override
-    public void winMatch(Long idTeam) {
+    public BalanceOfMatches winMatch(Long idTeam) {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
 
 
@@ -41,13 +41,41 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
             team.setBalanceOfMatches(balanceOfMatches);
 
             teamRepository.save(team);
+            return balanceOfMatches;
+
+        } else {
+            throw new RuntimeException("I can't find team with id: " + idTeam);
         }
 
 
     }
 
     @Override
-    public void drawMatch(Long idTeam) {
+    public BalanceOfMatches drawMatch(Long idTeam) {
+        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
+
+        if (teamOptional.isPresent()) {
+            Team team = teamOptional.get();
+
+            Optional<BalanceOfMatches> balanceOfMatchesOptional = Optional.ofNullable(team.getBalanceOfMatches());
+
+            BalanceOfMatches balanceOfMatches = balanceOfMatchesOptional.get();
+
+            balanceOfMatches.setDraws(team.getBalanceOfMatches().getDraws() + 1);
+
+            team.setBalanceOfMatches(balanceOfMatches);
+
+            teamRepository.save(team);
+
+            return balanceOfMatches;
+        } else {
+            throw new RuntimeException("gowno");
+        }
+
+    }
+
+    @Override
+    public BalanceOfMatches defeatMatch(Long idTeam) {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
 
 
@@ -58,32 +86,16 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
 
             BalanceOfMatches balanceOfMatches = balanceOfMatchesOptional.get();
 
-            balanceOfMatches.setWins(team.getBalanceOfMatches().getDraws() + 1);
+            balanceOfMatches.setDefeats(team.getBalanceOfMatches().getDefeats() + 1);
 
             team.setBalanceOfMatches(balanceOfMatches);
 
             teamRepository.save(team);
-        }
 
-    }
+            return balanceOfMatches;
 
-    @Override
-    public void defeatMatch(Long idTeam) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
-
-
-        if (teamOptional.isPresent()) {
-            Team team = teamOptional.get();
-
-            Optional<BalanceOfMatches> balanceOfMatchesOptional = Optional.ofNullable(team.getBalanceOfMatches());
-
-            BalanceOfMatches balanceOfMatches = balanceOfMatchesOptional.get();
-
-            balanceOfMatches.setWins(team.getBalanceOfMatches().getDefeats() + 1);
-
-            team.setBalanceOfMatches(balanceOfMatches);
-
-            teamRepository.save(team);
+        } else {
+            throw new RuntimeException("gowno");
         }
 
 
