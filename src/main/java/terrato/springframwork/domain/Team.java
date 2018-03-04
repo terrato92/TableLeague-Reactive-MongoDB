@@ -1,8 +1,6 @@
 package terrato.springframwork.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -10,9 +8,8 @@ import java.util.Set;
 /**
  * Created by onenight on 2018-03-02.
  */
-@Getter
-@Setter
-@EqualsAndHashCode(exclude = "league")
+
+@Data
 @Table
 @Entity
 public class Team implements Comparable<Team>{

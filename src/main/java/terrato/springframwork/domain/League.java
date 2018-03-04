@@ -29,6 +29,5 @@ public class League {
     @Lob
     private Byte[] image;
 
-    public League() {
-    }
+
 }
