@@ -9,7 +9,9 @@ import java.util.Set;
  * Created by onenight on 2018-03-02.
  */
 
-@Data
+@Getter
+@EqualsAndHashCode(exclude = "league")
+@Setter
 @Table
 @Entity
 public class Team implements Comparable<Team>{
@@ -45,6 +47,4 @@ public class Team implements Comparable<Team>{
     public int compareTo(Team o) {
         return this.getPoints() < o.getPoints() ? 1 : (this.getPoints() > o.getPoints() ? -1 : 0);
     }
-
-
 }

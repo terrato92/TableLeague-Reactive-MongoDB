@@ -7,7 +7,7 @@ import org.mockito.MockitoAnnotations;
 import terrato.springframwork.domain.League;
 import terrato.springframwork.domain.Team;
 import terrato.springframwork.repository.LeagueRepository;
-import terrato.springframwork.repository.TeamRepositroy;
+import terrato.springframwork.repository.TeamRepository;
 import terrato.springframwork.service.TeamService;
 
 import java.util.HashSet;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 public class TeamServiceImplTest {
 
     @Mock
-    TeamRepositroy teamRepositroy;
+    TeamRepository teamRepository;
 
     TeamService teamService;
 
@@ -36,7 +36,7 @@ public class TeamServiceImplTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        teamService = new TeamServiceImpl(leagueRepository, teamRepositroy);
+        teamService = new TeamServiceImpl(leagueRepository, teamRepository);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class TeamServiceImplTest {
         Team team = new Team();
         team.setId(1L);
 
-        when(teamRepositroy.findOne(anyLong())).thenReturn(team);
+        when(teamRepository.findOne(anyLong())).thenReturn(team);
 
     }
 
@@ -58,10 +58,10 @@ public class TeamServiceImplTest {
         league.add(team1);
         league.add(team2);
 
-        when(teamRepositroy.findAll()).thenReturn(league);
+        when(teamRepository.findAll()).thenReturn(league);
 
         assertEquals(2, league.size());
-        verify(teamRepositroy, never()).findOne(anyLong());
+        verify(teamRepository, never()).findOne(anyLong());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class TeamServiceImplTest {
         Team team = new Team();
         team.setId(2L);
 
-        when(teamRepositroy.findOne(anyLong())).thenReturn(team);
+        when(teamRepository.findOne(anyLong())).thenReturn(team);
 
         Team team1 = teamService.findTeamById(2L);
 
@@ -106,7 +106,7 @@ public class TeamServiceImplTest {
         team1.setId(2L);
         team.setName("lol");
 
-        when(teamRepositroy.findOne(anyLong())).thenReturn(team);
+        when(teamRepository.findOne(anyLong())).thenReturn(team);
 
         teamService.updateTeam(team1, 1L);
 
@@ -123,7 +123,7 @@ public class TeamServiceImplTest {
         Team team = new Team();
         team.setId(1L);
 
-        when(teamRepositroy.findOne(anyLong())).thenReturn(team);
+        when(teamRepository.findOne(anyLong())).thenReturn(team);
         when(leagueRepository.findOne(anyLong())).thenReturn(league);
 
         teamService.addTeamToLeague(2L, team.getId());
@@ -142,7 +142,7 @@ public class TeamServiceImplTest {
         team.setId(2L);
         team.setLeague(league);
 
-        when(teamRepositroy.findOne(anyLong())).thenReturn(team);
+        when(teamRepository.findOne(anyLong())).thenReturn(team);
 
         teamService.deleteTeamFromLeague(league.getId(), team.getId());
 
@@ -154,9 +154,9 @@ public class TeamServiceImplTest {
         Team team = new Team();
         team.setId(5L);
 
-        teamRepositroy.delete(team.getId());
+        teamRepository.delete(team.getId());
 
-        verify(teamRepositroy, times(1)).delete(anyLong());
+        verify(teamRepository, times(1)).delete(anyLong());
     }
 
     @Test

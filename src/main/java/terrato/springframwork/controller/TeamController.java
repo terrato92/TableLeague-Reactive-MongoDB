@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import terrato.springframwork.domain.Team;
-import terrato.springframwork.service.LeagueService;
 import terrato.springframwork.service.TeamService;
 
 /**
@@ -16,11 +15,9 @@ import terrato.springframwork.service.TeamService;
 @Controller
 public class TeamController {
 
-    private final LeagueService leagueService;
     private final TeamService teamService;
 
-    public TeamController(LeagueService leagueService, TeamService teamService) {
-        this.leagueService = leagueService;
+    public TeamController(TeamService teamService) {
         this.teamService = teamService;
     }
 

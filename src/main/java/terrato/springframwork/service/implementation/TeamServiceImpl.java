@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import terrato.springframwork.domain.League;
 import terrato.springframwork.domain.Team;
 import terrato.springframwork.repository.LeagueRepository;
-import terrato.springframwork.repository.TeamRepositroy;
+import terrato.springframwork.repository.TeamRepository;
 import terrato.springframwork.service.TeamService;
 
 import java.util.*;
@@ -20,16 +20,16 @@ public class TeamServiceImpl implements TeamService {
 
     LeagueRepository leagueRepository;
 
-    TeamRepositroy teamRepositroy;
+    TeamRepository teamRepository;
 
-    public TeamServiceImpl(LeagueRepository leagueRepository, TeamRepositroy teamRepositroy) {
+    public TeamServiceImpl(LeagueRepository leagueRepository, TeamRepository teamRepository) {
         this.leagueRepository = leagueRepository;
-        this.teamRepositroy = teamRepositroy;
+        this.teamRepository = teamRepository;
     }
 
     @Override
     public Team createTeam(Team team) {
-        Team team1 = teamRepositroy.findOne(team.getId());
+        Team team1 = teamRepository.findOne(team.getId());
 
         if (team1 == null) {
             Team newTeam = new Team();
@@ -40,7 +40,7 @@ public class TeamServiceImpl implements TeamService {
             newTeam.setBalanceOfMatches(team.getBalanceOfMatches());
             newTeam.setPlayers(team.getPlayers());
 
-            teamRepositroy.save(newTeam);
+            teamRepository.save(newTeam);
             return newTeam;
 
         } else {
@@ -52,7 +52,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Set<Team> getTeams() {
         Set<Team> teams = new HashSet<>();
-        teamRepositroy.findAll().forEach(teams::add);
+        teamRepository.findAll().forEach(teams::add);
 
         return teams;
     }
@@ -73,13 +73,13 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team findTeamById(Long idTeam) {
-        return teamRepositroy.findOne(idTeam);
+        return teamRepository.findOne(idTeam);
     }
 
     @Override
     @Transactional
     public Team updateTeam(Team source, Long id) {
-        Optional<Team> teamUpdate = Optional.ofNullable(teamRepositroy.findOne(id));
+        Optional<Team> teamUpdate = Optional.ofNullable(teamRepository.findOne(id));
 
         if (teamUpdate.isPresent()) {
 
@@ -103,11 +103,11 @@ public class TeamServiceImpl implements TeamService {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(leagueId));
 
         if (leagueOptional.isPresent()) {
-            Optional<Team> teamOptional = Optional.ofNullable(teamRepositroy.findOne(teamId));
+            Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(teamId));
             Team team = teamOptional.get();
             team.setLeague(leagueOptional.get());
 
-            teamRepositroy.save(team);
+            teamRepository.save(team);
             return team;
         } else {
             throw new RuntimeException("League id doesn't exist");
@@ -139,12 +139,12 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional
     public void deleteTeam(Long id) {
-        Optional<Team> teamToDelete = Optional.ofNullable(teamRepositroy.findOne(id));
+        Optional<Team> teamToDelete = Optional.ofNullable(teamRepository.findOne(id));
 
         if (!teamToDelete.isPresent()) {
             log.error("Team with id: " + id + " doesn't exist");
         } else
-            teamRepositroy.delete(teamToDelete.get());
+            teamRepository.delete(teamToDelete.get());
     }
 
     @Override

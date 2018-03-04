@@ -18,9 +18,7 @@ public class BalanceOfMatches {
     private Long balance_id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "team_balance",
-    joinColumns = {@JoinColumn(name = "balance_id")},
-    inverseJoinColumns = {@JoinColumn(name = "team_id")})
+    @JoinColumn(name ="team_id")
     private Team team;
 
     private int wins = 0;
