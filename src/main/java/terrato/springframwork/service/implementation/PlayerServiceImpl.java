@@ -23,13 +23,17 @@ public class PlayerServiceImpl implements PlayerService {
     PlayerRepository playerRepository;
     TeamRepository teamRepository;
 
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository) {
+        this.playerRepository = playerRepository;
+        this.teamRepository = teamRepository;
+    }
 
     @Override
     public Player createPlayer(Player playerSource) {
         Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(playerSource.getId()));
 
         if (!playerOptional.isPresent()) {
-            Player player = playerOptional.get();
+            Player player = new Player();
 
             player.setName(playerSource.getName());
             player.setAge(playerSource.getAge());
@@ -98,13 +102,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void deletePlayerFromTeam(Long idPlayer, Long idTeam) {
+    public Collection<Player> deletePlayerFromTeam(Long idPlayer, Long idTeam) {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idPlayer));
 
         if (teamOptional.isPresent()) {
             Team team = teamOptional.get();
 
-            Optional <Player> playerOptional = team.getPlayers().stream()
+            Optional<Player> playerOptional = team.getPlayers().stream()
                     .filter(player -> player.getId().equals(idPlayer))
                     .findFirst();
 
@@ -113,6 +117,11 @@ public class PlayerServiceImpl implements PlayerService {
             team.getPlayers().remove(playerToDelete);
 
             teamRepository.save(team);
+
+            return team.getPlayers();
+        } else {
+            log.error("Team with id: " + idTeam + " doesn't exist");
+            throw new RuntimeException("I can't find team with id: " + idTeam);
         }
     }
 }

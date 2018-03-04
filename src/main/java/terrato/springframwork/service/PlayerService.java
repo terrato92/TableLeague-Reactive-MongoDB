@@ -21,6 +21,6 @@ public interface PlayerService {
 
     void deletePlayer(Long idPlayer);
 
-    void deletePlayerFromTeam(Long idPlayer, Long idTeam);
+    Collection<Player> deletePlayerFromTeam(Long idPlayer, Long idTeam);
 
 }

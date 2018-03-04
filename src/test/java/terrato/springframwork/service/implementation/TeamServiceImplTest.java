@@ -25,10 +25,10 @@ public class TeamServiceImplTest {
     @Mock
     TeamRepository teamRepository;
 
-    TeamService teamService;
-
     @Mock
     LeagueRepository leagueRepository;
+
+    TeamService teamService;
 
 
 
