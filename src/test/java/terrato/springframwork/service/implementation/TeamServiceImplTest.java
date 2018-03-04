@@ -144,9 +144,9 @@ public class TeamServiceImplTest {
 
         when(teamRepositroy.findOne(anyLong())).thenReturn(team);
 
-        teamService.deleteTeamFromLeague(team.getId());
+        teamService.deleteTeamFromLeague(league.getId(), team.getId());
 
-        assertNull(team.getLeague());
+        assertTrue(league.getTeams().isEmpty());
     }
 
     @Test

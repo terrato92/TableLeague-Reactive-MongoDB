@@ -116,16 +116,24 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     @Transactional
-    public void deleteTeamFromLeague(Long idTeam) {
-        Optional<Team> teamToDelete = Optional.ofNullable(teamRepositroy.findOne(idTeam));
+    public void deleteTeamFromLeague(Long idLeague, Long idTeam) {
+        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
-        if (!teamToDelete.isPresent()) {
-            log.error("Team with id: " + idTeam + " doesn't exist");
-        } else {
-            Team team = teamToDelete.get();
-            team.setLeague(null);
-            teamRepositroy.save(team);
+        if (leagueOptional.isPresent()){
+            League league = leagueOptional.get();
+
+            Optional<Team> teamOptional = league.getTeams()
+                    .stream()
+                    .filter(team -> team.getId().equals(idTeam))
+                    .findFirst();
+
+            if (teamOptional.isPresent()){
+                Team teamToDelete = teamOptional.get();
+                league.getTeams().remove(teamToDelete);
+                leagueRepository.save(league);
+            }
         }
+
     }
 
     @Override
