@@ -37,11 +37,8 @@ public class PlayerServiceImpl implements PlayerService {
 
             player.setName(playerSource.getName());
             player.setAge(playerSource.getAge());
-            if (playerSource.getTeam() != null) {
-                player.setTeam(playerSource.getTeam());
-            } else {
-                player.setTeam(null);
-            }
+            player.setTeam(playerSource.getTeam());
+
             player.setPosition(playerSource.getPosition());
 
             playerRepository.save(player);
