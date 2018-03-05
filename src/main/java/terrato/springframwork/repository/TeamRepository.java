@@ -7,4 +7,5 @@ import terrato.springframwork.domain.Team;
  * Created by onenight on 2018-03-03.
  */
 public interface TeamRepository extends CrudRepository<Team, Long> {
+
 }

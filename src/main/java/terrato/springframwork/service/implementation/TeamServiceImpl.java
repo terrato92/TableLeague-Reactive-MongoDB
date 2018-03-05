@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import terrato.springframwork.domain.League;
 import terrato.springframwork.domain.Team;
 import terrato.springframwork.repository.LeagueRepository;
+import terrato.springframwork.repository.NationalityRepository;
 import terrato.springframwork.repository.TeamRepository;
 import terrato.springframwork.service.TeamService;
 
@@ -18,36 +19,16 @@ import java.util.*;
 @Slf4j
 public class TeamServiceImpl implements TeamService {
 
-    LeagueRepository leagueRepository;
+    private final LeagueRepository leagueRepository;
+    private final TeamRepository teamRepository;
+    private final NationalityRepository nationalityRepository;
 
-    TeamRepository teamRepository;
-
-    public TeamServiceImpl(LeagueRepository leagueRepository, TeamRepository teamRepository) {
+    public TeamServiceImpl(LeagueRepository leagueRepository, TeamRepository teamRepository, NationalityRepository nationalityRepository) {
         this.leagueRepository = leagueRepository;
         this.teamRepository = teamRepository;
+        this.nationalityRepository = nationalityRepository;
     }
 
-    @Override
-    public Team createTeam(Team team) {
-        Team team1 = teamRepository.findOne(team.getId());
-
-        if (team1 == null) {
-            Team newTeam = new Team();
-
-            newTeam.setId(team.getId());
-            newTeam.setName(team.getName());
-            newTeam.setLeague(null);
-            newTeam.setBalanceOfMatches(team.getBalanceOfMatches());
-            newTeam.setPlayers(team.getPlayers());
-
-            teamRepository.save(newTeam);
-            return newTeam;
-
-        } else {
-            log.error("Team with id: " + team.getId() + " is in League");
-            throw new RuntimeException("Team exist.");
-        }
-    }
 
     @Override
     public Set<Team> getTeams() {
@@ -72,31 +53,63 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team findTeamById(Long idTeam) {
-        return teamRepository.findOne(idTeam);
+    public Team findTeamById(Long idLeague, Long idTeam) {
+        Optional<League> leagueOptional = Optional.of(leagueRepository.findOne(idLeague));
+
+        if (!leagueOptional.isPresent()) {
+            log.error("League is not found!");
+        }
+
+        League league = leagueOptional.get();
+
+        Optional<Team> teamOptional = league.getTeams()
+                .stream()
+                .filter(team -> team.getId().equals(idTeam))
+                .findFirst();
+
+        return teamOptional.get();
     }
 
     @Override
     @Transactional
-    public Team updateTeam(Team source, Long id) {
-        Optional<Team> teamUpdate = Optional.ofNullable(teamRepository.findOne(id));
+    public Team saveTeam(Team source) {
+        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(source.getLeague().getId()));
 
-        if (teamUpdate.isPresent()) {
-
-            teamUpdate.get().setName(source.getName());
-            teamUpdate.get().setBalanceOfMatches(source.getBalanceOfMatches());
-            teamUpdate.get().setLeague(source.getLeague());
-            teamUpdate.get().setPlayers(source.getPlayers());
-            teamUpdate.get().setPoints(source.getPoints());
-
-            return teamUpdate.get();
-
+        if (!leagueOptional.isPresent()) {
+            log.error("League with id " + source.getId() + " doesn't exist");
+            return new Team();
         } else {
-            log.error("Team with id: " + source.getId() + " doesn't exist");
-            throw new RuntimeException("I can't find team with id: " + source.getId());
+
+            League league = leagueOptional.get();
+
+            Optional<Team> teamOptional = league.getTeams().stream()
+                    .filter(team -> team.getId().equals(source.getId()))
+                    .findFirst();
+
+            if (teamOptional.isPresent()) {
+
+                teamOptional.get().setName(source.getName());
+                teamOptional.get().setBalanceOfMatches(source.getBalanceOfMatches());
+                teamOptional.get().setLeague(source.getLeague());
+                teamOptional.get().setPlayers(source.getPlayers());
+                teamOptional.get().setPoints(source.getPoints());
+                teamOptional.get().setState(nationalityRepository.findOne(source.getState().getId()));
+
+            } else {
+                Team team = new Team();
+                team.setLeague(league);
+                league.getTeams().add(team);
+            }
+
+            League savedLeague = leagueRepository.save(league);
+
+            Optional<Team> saveTeamOptional = savedLeague.getTeams().stream()
+                    .filter(leagueTeam -> leagueTeam.getId().equals(source.getId()))
+                    .findFirst();
+
+            return saveTeamOptional.get();
         }
     }
-
     @Override
     @Transactional
     public Team addTeamToLeague(Long leagueId, Long teamId) {
@@ -119,7 +132,7 @@ public class TeamServiceImpl implements TeamService {
     public void deleteTeamFromLeague(Long idLeague, Long idTeam) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
-        if (leagueOptional.isPresent()){
+        if (leagueOptional.isPresent()) {
             League league = leagueOptional.get();
 
             Optional<Team> teamOptional = league.getTeams()
@@ -127,7 +140,7 @@ public class TeamServiceImpl implements TeamService {
                     .filter(team -> team.getId().equals(idTeam))
                     .findFirst();
 
-            if (teamOptional.isPresent()){
+            if (teamOptional.isPresent()) {
                 Team teamToDelete = teamOptional.get();
                 league.getTeams().remove(teamToDelete);
                 leagueRepository.save(league);

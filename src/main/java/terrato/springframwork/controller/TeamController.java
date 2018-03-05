@@ -6,7 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import terrato.springframwork.domain.League;
+import terrato.springframwork.domain.Nationality;
 import terrato.springframwork.domain.Team;
+import terrato.springframwork.service.LeagueService;
+import terrato.springframwork.service.NationalityService;
 import terrato.springframwork.service.TeamService;
 
 /**
@@ -16,47 +20,63 @@ import terrato.springframwork.service.TeamService;
 public class TeamController {
 
     private final TeamService teamService;
+    private final LeagueService leagueService;
+    private final NationalityService nationalityService;
 
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamService teamService, LeagueService leagueService, NationalityService nationalityService) {
         this.teamService = teamService;
-    }
-
-    @RequestMapping("team/new")
-    public String newTeam(Model model){
-        model.addAttribute("team", new Team());
-
-        return "team/list";
+        this.leagueService = leagueService;
+        this.nationalityService = nationalityService;
     }
 
     @GetMapping
-    @RequestMapping("team/list")
-    public String getTeams(Model model){
-        model.addAttribute("teams", teamService.getTeams());
+    @RequestMapping("league/{leagueId}/team/new")
+    public String newTeam(@PathVariable String leagueId, Model model){
+        League league = leagueService.getLeagueById(Long.valueOf(leagueId));
 
-        return "team/list";
+        Team team = new Team();
+        team.setLeague(league);
+        model.addAttribute("team", team);
+
+        team.setState(new Nationality());
+        model.addAttribute("nationalList", nationalityService.listAllStates());
+
+        return "league/team/teamform";
     }
 
     @GetMapping
-    @RequestMapping("league/{leagueId}/teams")
-    public String getTeamsFromLeagues(@PathVariable String leagueId, Model model){
-        model.addAttribute("teams", teamService.getTeamsFromLeague(Long.valueOf(leagueId)));
+    @RequestMapping("league{leagueId}/teams")
+    public String getTeams(@PathVariable String leagueId, Model model){
 
-        return "league/teams";
+        model.addAttribute("teams", leagueService.getLeagueById(Long.valueOf(leagueId)));
+
+        return "league/team/list";
     }
 
-    @GetMapping
-    @RequestMapping("team/{id}")
-    public String findTeamById(@PathVariable String leagueId, Model model){
-        model.addAttribute("team", teamService.findTeamById(Long.valueOf(leagueId)));
+    @RequestMapping("league/{leagueId}/team/{teamId}/show")
+    public String showLeagueTeamById (@PathVariable String leagueId,
+                                      @PathVariable String teamId, Model model) {
+        model.addAttribute("team", teamService.findTeamById(Long.valueOf(leagueId), Long.valueOf(teamId)));
 
-        return "team/"+ leagueId + "/show";
+        return "league/team/show";
     }
 
-    @RequestMapping("team/{id}/update")
-    public String saveOrUpdateTeam(@PathVariable String id, @ModelAttribute Team team){
-        Team updateTeam = teamService.updateTeam(team, Long.valueOf(id));
 
-        return "team/" + updateTeam.getId() + "/show";
+    @RequestMapping("league/{leagueId}/team/{teamId}/update")
+    public String updateLeagueTeam(@PathVariable String leagueId,
+                                   @PathVariable String teamId, Model model){
+        model.addAttribute("team", teamService.findTeamById(Long.valueOf(leagueId), Long.valueOf(teamId)));
+
+        model.addAttribute("states", nationalityService.listAllStates());
+
+        return "league/team/teamform";
+    }
+
+    @RequestMapping("league/{leagueId}/team")
+    public String saveOrUpdateTeam(@ModelAttribute Team team){
+        Team updateTeam = teamService.saveTeam(team);
+
+        return "redirect:/league/" + updateTeam.getId() + "/team/" + team.getId();
     }
 
     @GetMapping
@@ -65,16 +85,16 @@ public class TeamController {
                                   @PathVariable String teamId, Model model){
         model.addAttribute("team", teamService.addTeamToLeague(Long.valueOf(leagueId), Long.valueOf(teamId)));
 
-        return "team/" + teamId +  "/show";
+        return "team/" + teamId + "/show";
     }
 
     @GetMapping
     @RequestMapping("league/{leagueId}/team/{teamId}/delete")
-    public String deleteTeamFromLeague(@PathVariable String leagueId,
+    public String deleteLeagueTeam(@PathVariable String leagueId,
                                        @PathVariable String teamId){
         teamService.deleteTeamFromLeague(Long.valueOf(leagueId), Long.valueOf(teamId));
 
-        return "league/" + leagueId + "teams/list";
+        return "redirect:/league/" + leagueId + "teams";
     }
 
     @RequestMapping("team/{id}/delete")

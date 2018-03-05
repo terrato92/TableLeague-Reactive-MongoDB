@@ -9,4 +9,5 @@ import terrato.springframwork.domain.League;
  */
 @Repository
 public interface LeagueRepository extends CrudRepository<League, Long> {
+
 }

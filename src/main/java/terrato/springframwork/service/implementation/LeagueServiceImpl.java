@@ -39,10 +39,15 @@ public class LeagueServiceImpl implements LeagueService {
         return league;
     }
 
+
+
     @Override
-    public League addLeague(League league) {
-        return leagueRepository.save(league);
+    public League saveLeague(League league) {
+        League league1 = leagueRepository.save(league);
+
+        return league1;
     }
+
 
     @Override
     public void deleteLeagueById(Long idLeague) {
@@ -50,4 +55,6 @@ public class LeagueServiceImpl implements LeagueService {
         League league1 = leagueOptional.get();
         leagueRepository.delete(league1);
     }
+
+
 }

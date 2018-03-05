@@ -42,6 +42,9 @@ public class Team implements Comparable<Team>{
     @Lob
     private Byte[] image;
 
+    @OneToOne
+    private Nationality state;
+
 
     @Override
     public int compareTo(Team o) {

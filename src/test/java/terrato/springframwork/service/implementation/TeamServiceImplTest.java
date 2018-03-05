@@ -7,10 +7,12 @@ import org.mockito.MockitoAnnotations;
 import terrato.springframwork.domain.League;
 import terrato.springframwork.domain.Team;
 import terrato.springframwork.repository.LeagueRepository;
+import terrato.springframwork.repository.NationalityRepository;
 import terrato.springframwork.repository.TeamRepository;
 import terrato.springframwork.service.TeamService;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -26,6 +28,9 @@ public class TeamServiceImplTest {
     TeamRepository teamRepository;
 
     @Mock
+    NationalityRepository nationalityRepository;
+
+    @Mock
     LeagueRepository leagueRepository;
 
     TeamService teamService;
@@ -36,33 +41,9 @@ public class TeamServiceImplTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        teamService = new TeamServiceImpl(leagueRepository, teamRepository);
+        teamService = new TeamServiceImpl(leagueRepository, teamRepository, nationalityRepository);
     }
 
-    @Test
-    public void createTeam() throws Exception {
-        Team team = new Team();
-        team.setId(1L);
-
-        when(teamRepository.findOne(anyLong())).thenReturn(team);
-
-    }
-
-    @Test
-    public void getTeams() throws Exception {
-        Set<Team> league = new HashSet<>();
-        Team team1 = new Team();
-        team1.setId(1L);
-        Team team2 = new Team();
-        team2.setId(2L);
-        league.add(team1);
-        league.add(team2);
-
-        when(teamRepository.findAll()).thenReturn(league);
-
-        assertEquals(2, league.size());
-        verify(teamRepository, never()).findOne(anyLong());
-    }
 
     @Test
     public void getTeamsFromLeague() throws Exception {
@@ -87,33 +68,25 @@ public class TeamServiceImplTest {
     }
 
     @Test
-    public void findTeamById() throws Exception {
+    public void findLeagueTeamById() throws Exception {
         Team team = new Team();
         team.setId(2L);
 
-        when(teamRepository.findOne(anyLong())).thenReturn(team);
+        League league = new League();
+        league.setId(1L);
+        team.setLeague(league);
+        league.getTeams().add(team);
 
-        Team team1 = teamService.findTeamById(2L);
+        Optional<League> leagueOptional = Optional.of(league);
 
-        assertNotNull(team1);
+        when(leagueRepository.findOne(anyLong())).thenReturn(leagueOptional.get());
+
+        Team team1 = teamService.findTeamById(1L, 2L);
+
+        assertEquals(Long.valueOf(2L), team1.getId());
+        assertNotNull(teamService.findTeamById(1L, 2L));
     }
 
-    @Test
-    public void updateTeam() throws Exception {
-        Team team = new Team();
-        team.setId(1L);
-        Team team1 = new Team();
-        team1.setId(2L);
-        team.setName("lol");
-
-        when(teamRepository.findOne(anyLong())).thenReturn(team);
-
-        teamService.updateTeam(team1, 1L);
-
-        assertEquals(team.getName(), team1.getName());
-
-
-    }
 
     @Test
     public void addTeamToLeague() throws Exception {
@@ -134,6 +107,29 @@ public class TeamServiceImplTest {
     }
 
     @Test
+    public void testSaveTeam() throws Exception {
+        Team team = new Team();
+        team.setId(1L);
+        League league = new League();
+        league.setId(2L);
+        team.setLeague(league);
+
+        Optional<League> leagueOptional = Optional.of(new League());
+
+        League saveLeague = new League();
+        saveLeague.setId(3L);
+        saveLeague.addTeam(team);
+        saveLeague.getTeams().iterator().next().setId(1L);
+
+        when(leagueRepository.findOne(anyLong())).thenReturn(leagueOptional.get());
+        when(leagueRepository.save((League) any())).thenReturn(saveLeague);
+
+        Team team1 = teamService.saveTeam(team);
+
+        assertEquals(Long.valueOf(1L), team1.getId());
+    }
+
+    @Test
     public void deleteTeamFromLeague() throws Exception {
         League league = new League();
         league.setId(3L);
@@ -149,15 +145,6 @@ public class TeamServiceImplTest {
         assertTrue(league.getTeams().isEmpty());
     }
 
-    @Test
-    public void deleteTeam() throws Exception {
-        Team team = new Team();
-        team.setId(5L);
-
-        teamRepository.delete(team.getId());
-
-        verify(teamRepository, times(1)).delete(anyLong());
-    }
 
     @Test
     public void setTeamByPoints() throws Exception {
@@ -184,7 +171,6 @@ public class TeamServiceImplTest {
         when(leagueRepository.findOne(anyLong())).thenReturn(league);
 
         teamService.setTeamByPoints(league.getId());
-
 
         assertEquals("Manchester", league.getTeams().iterator().next().getName());
 

@@ -36,12 +36,12 @@ public class LeagueController {
     public String showLeagueById(@PathVariable String id, Model model) {
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(id)));
 
-        return "league/" + id + "/show";
+        return "league/show";
     }
 
     @RequestMapping("league/new")
     public String newLeague(Model model) {
-        model.addAttribute("league", leagueService.addLeague(new League()));
+        model.addAttribute("league", new League());
 
         return "league/show";
     }
@@ -53,18 +53,25 @@ public class LeagueController {
         return "redirect:/show";
     }
 
+    @RequestMapping("league/{leagueId}/update")
+    public String updateLeague(@PathVariable String leagueId, Model model){
+        model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(leagueId)));
+
+        return "league/leagueform";
+    }
+
     @PostMapping
-    @RequestMapping("league/{id}/update")
-    public String saveOrUpdateLeague(@Valid @ModelAttribute("league") League league, BindingResult bindingResult){
+    @RequestMapping("league")
+    public String saveOrUpdate(@Valid @ModelAttribute("league") League league, BindingResult bindingResult){
 
         if (bindingResult.hasErrors()){
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
             return "league/leagueform";
         }
 
-        League league1 = leagueService.addLeague(league);
+        League savedLeague = leagueService.saveLeague(league);
 
-        return "league/" + league1.getId() + "/show";
+        return "redirect:/league/" + savedLeague.getId() + "/show";
 
     }
 

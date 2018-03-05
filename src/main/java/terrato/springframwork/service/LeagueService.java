@@ -12,9 +12,9 @@ public interface LeagueService {
 
     Set<League> getLeagues();
 
-    League getLeagueById(Long aLong);
+    League saveLeague(League league);
 
-    League addLeague(League league);
+    League getLeagueById(Long aLong);
 
     void deleteLeagueById(Long id);
 

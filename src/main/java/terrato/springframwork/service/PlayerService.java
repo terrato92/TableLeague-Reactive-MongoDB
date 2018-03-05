@@ -9,7 +9,6 @@ import java.util.Collection;
  */
 public interface PlayerService {
 
-    Player createPlayer(Player playerSource);
 
     Collection<Player> getPlayers();
 

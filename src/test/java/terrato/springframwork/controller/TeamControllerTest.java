@@ -6,7 +6,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
+import terrato.springframwork.service.LeagueService;
+import terrato.springframwork.service.NationalityService;
 import terrato.springframwork.service.TeamService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,7 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TeamControllerTest {
 
     @Mock
-    Model modell;
+    LeagueService leagueService;
+
+    @Mock
+    NationalityService nationalityService;
 
     @Mock
     TeamService teamService;
@@ -32,7 +36,7 @@ public class TeamControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        teamController = new TeamController(teamService);
+        teamController = new TeamController(teamService, leagueService, nationalityService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(teamController).build();
     }

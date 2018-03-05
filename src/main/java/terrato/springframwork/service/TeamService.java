@@ -11,16 +11,13 @@ import java.util.Set;
  */
 public interface TeamService {
 
-
-    Team createTeam(Team team);
-
     Set<Team> getTeams();
 
     Collection<Team> getTeamsFromLeague(Long idLeague);
 
-    Team findTeamById(Long idTeam);
+    Team findTeamById(Long idLeague, Long idTeam);
 
-    Team updateTeam(Team teamSource, Long idTeam);
+    Team saveTeam(Team teamSource);
 
     Team addTeamToLeague(Long leagueId, Long teamId);
 

@@ -38,16 +38,6 @@ public class PlayerServiceImplTest {
         playerService = new PlayerServiceImpl(playerRepository, teamRepository);
     }
 
-    @Test
-    public void createPlayerTest() throws Exception {
-        Player player = new Player();
-        player.setId(3L);
-        player.setName("roman");
-
-        playerService.createPlayer(new Player());
-
-        verify(playerRepository, times(1)).findOne(anyLong());
-    }
 
     @Test
     public void getPlayersTest() throws Exception {

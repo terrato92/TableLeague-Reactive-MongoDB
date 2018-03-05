@@ -28,27 +28,6 @@ public class PlayerServiceImpl implements PlayerService {
         this.teamRepository = teamRepository;
     }
 
-    @Override
-    public Player createPlayer(Player playerSource) {
-        Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(playerSource.getId()));
-
-        if (!playerOptional.isPresent()) {
-            Player player = new Player();
-
-            player.setName(playerSource.getName());
-            player.setAge(playerSource.getAge());
-            player.setTeam(playerSource.getTeam());
-
-            player.setPosition(playerSource.getPosition());
-
-            playerRepository.save(player);
-
-            return player;
-        } else {
-            log.error("Player with id: " + playerSource.getId() + "already exist.");
-            throw new RuntimeException("You can't add player with the same id");
-        }
-    }
 
     @Override
     public Collection<Player> getPlayers() {

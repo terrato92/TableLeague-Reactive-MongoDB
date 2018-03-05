@@ -29,5 +29,11 @@ public class League {
     @Lob
     private Byte[] image;
 
+    public League addTeam(Team team){
+        team.setLeague(this);
+        teams.add(team);
+        return this;
+    }
+
 
 }
