@@ -107,11 +107,21 @@ public class TeamServiceImpl implements TeamService {
                     .filter(leagueTeam -> leagueTeam.getId().equals(source.getId()))
                     .findFirst();
 
+
+            if (!saveTeamOptional.isPresent()){
+                saveTeamOptional = savedLeague.getTeams().stream()
+                        .filter(team -> team.getLeague().equals(source))
+                        .filter(team -> team.getPlayers().equals(source))
+                        .filter(team -> team.getBalanceOfMatches().equals(source.getBalanceOfMatches()))
+                        .findFirst();
+            }
+
             return saveTeamOptional.get();
         }
     }
+
+
     @Override
-    @Transactional
     public Team addTeamToLeague(Long leagueId, Long teamId) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(leagueId));
 
@@ -128,7 +138,6 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    @Transactional
     public void deleteTeamFromLeague(Long idLeague, Long idTeam) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
@@ -150,7 +159,6 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    @Transactional
     public void deleteTeam(Long id) {
         Optional<Team> teamToDelete = Optional.ofNullable(teamRepository.findOne(id));
 

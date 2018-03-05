@@ -7,6 +7,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import terrato.springframwork.domain.League;
+import terrato.springframwork.domain.Team;
 import terrato.springframwork.service.LeagueService;
 import terrato.springframwork.service.NationalityService;
 import terrato.springframwork.service.TeamService;
@@ -14,13 +15,9 @@ import terrato.springframwork.service.TeamService;
 import java.util.HashSet;
 
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Created by onenight on 2018-03-04.
@@ -66,12 +63,19 @@ public class TeamControllerTest {
     }
 
     @Test
-    public void getTeams() throws Exception {
+    public void showTeamTest() throws Exception {
+        Team team = new Team();
 
+        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
+
+        mockMvc.perform(get("/league/1/team/2/show"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("league/team/show"))
+                .andExpect(model().attributeExists("team"));
     }
 
     @Test
-    public void getTeamsFromLeagues() throws Exception {
+    public void getTeamsFromLeaguesTest() throws Exception {
         League league = new League();
 
         when(leagueService.getLeagueById(anyLong())).thenReturn(league);
@@ -86,11 +90,35 @@ public class TeamControllerTest {
     }
 
     @Test
-    public void findTeamById() throws Exception {
+    public void updateTeamFormTest() throws Exception {
+
+        Team team = new Team();
+
+        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
+        when(nationalityService.listAllStates()).thenReturn(new HashSet<>());
+
+        mockMvc.perform(get("/league/1/team/2/update"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("league/team/teamform"))
+                .andExpect(model().attributeExists("team"))
+                .andExpect(model().attributeExists("states"));
+
+
     }
 
     @Test
-    public void saveOrUpdateTeam() throws Exception {
+    public void saveOrUpdate() throws Exception {
+//        Team team = new Team();
+//        team.setId(2L);
+//        team.setLeague(new League());
+//
+//        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
+//
+//        mockMvc.perform(get("/league/1/team").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .param("id", "2"))
+//                .andExpect(status().is3xxRedirection())
+//                .andExpect(view().name("redirect:/league/1/team/2/show"));
+
     }
 
     @Test
