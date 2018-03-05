@@ -10,10 +10,6 @@ import terrato.springframwork.service.LeagueService;
 import terrato.springframwork.service.NationalityService;
 import terrato.springframwork.service.TeamService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 /**
  * Created by onenight on 2018-03-04.
  */
@@ -41,13 +37,6 @@ public class TeamControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(teamController).build();
     }
 
-    @Test
-    public void newTeam() throws Exception {
-
-        mockMvc.perform(get("/team/new"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("team/list"));
-    }
 
     @Test
     public void getTeams() throws Exception {

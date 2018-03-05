@@ -78,7 +78,7 @@ public class LeagueControllerTest {
 
         mockMvc.perform(get("/leagues/1/show"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("league/1/show"));
+                .andExpect(view().name("league/show"));
     }
 
     @Test
