@@ -11,6 +11,8 @@ import terrato.springframwork.service.LeagueService;
 import terrato.springframwork.service.NationalityService;
 import terrato.springframwork.service.TeamService;
 
+import java.util.HashSet;
+
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,6 +49,21 @@ public class TeamControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(teamController).build();
     }
 
+
+    @Test
+    public void newTeamTest() throws Exception {
+        League league = new League();
+        league.setId(1L);
+
+        when(leagueService.getLeagueById(anyLong())).thenReturn(league);
+        when(nationalityService.listAllStates()).thenReturn(new HashSet<>());
+
+        mockMvc.perform(get("/league/1/team/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("league/team/teamform"))
+                .andExpect(model().attributeExists("team"))
+                .andExpect(model().attributeExists("nationalList"));
+    }
 
     @Test
     public void getTeams() throws Exception {
