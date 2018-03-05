@@ -56,7 +56,6 @@ public class TeamControllerTest {
     @Test
     public void getTeamsFromLeagues() throws Exception {
         League league = new League();
-        league.setId(1L);
 
         when(leagueService.getLeagueById(anyLong())).thenReturn(league);
 
