@@ -12,9 +12,7 @@ public interface PlayerService {
 
     Collection<Player> getPlayersFromTeam(Long idTeam);
 
-
     Player savePlayerToTeam(Player player);
-
 
     Collection<Player> deletePlayerFromTeam(Long idPlayer, Long idTeam);
 
