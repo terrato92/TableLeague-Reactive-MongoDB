@@ -2,16 +2,16 @@ package terrato.springframwork.service.implementation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import terrato.springframwork.domain.Player;
 import terrato.springframwork.domain.Team;
+import terrato.springframwork.repository.NationalityRepository;
 import terrato.springframwork.repository.PlayerRepository;
 import terrato.springframwork.repository.TeamRepository;
 import terrato.springframwork.service.PlayerService;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Created by onenight on 2018-03-03.
@@ -20,21 +20,17 @@ import java.util.Set;
 @Slf4j
 public class PlayerServiceImpl implements PlayerService {
 
-    PlayerRepository playerRepository;
-    TeamRepository teamRepository;
+    private final PlayerRepository playerRepository;
+    private final TeamRepository teamRepository;
+    private  final NationalityRepository nationalityRepository;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository) {
+    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, NationalityRepository nationalityRepository) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
+
+        this.nationalityRepository = nationalityRepository;
     }
 
-
-    @Override
-    public Collection<Player> getPlayers() {
-        Set<Player> playerSet = new HashSet<>();
-        playerRepository.findAll().iterator().forEachRemaining(playerSet::add);
-        return playerSet;
-    }
 
     @Override
     public Collection<Player> getPlayersFromTeam(Long idTeam) {
@@ -49,33 +45,41 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Collection<Player> addPlayerToTeam(Player player, Long idTeam) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
+    @Transactional
+    public Player savePlayerToTeam(Player player) {
+        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(player.getTeam().getId()));
 
-        if (teamOptional.isPresent()) {
+        if (!teamOptional.isPresent()) {
+            return new Player();
+
+        } else {
             Team team = teamOptional.get();
 
-            player.setTeam(team);
-            team.getPlayers().add(player);
+            Optional<Player> playerOptional = team.getPlayers().stream()
+                    .filter(player1 -> player1.getId().equals(player.getId()))
+                    .findFirst();
 
-            playerRepository.save(player);
-            teamRepository.save(team);
+            if (playerOptional.isPresent()){
+                Player player1 = playerOptional.get();
+                player1.setTeam(player.getTeam());
+                player1.setName(player.getName());
+                player1.setState(nationalityRepository.findOne(player.getState().getId()));
+                player1.setAge(player.getAge());
+                player1.setPosition(player.getPosition());
 
-            return team.getPlayers();
-        } else {
-            log.error("Team with id: " + idTeam + " doesn't exist");
-            throw new RuntimeException("I can't find team with id: " + idTeam);
+            } else {
+
+                team.addPlayer(player);
+                player.setTeam(team);
+
+            }
+
         }
+
+        return player;
     }
 
-    @Override
-    public void deletePlayer(Long idPlayer) {
-        Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(idPlayer));
 
-        if (playerOptional.isPresent()) {
-            playerRepository.delete(idPlayer);
-        }
-    }
 
     @Override
     public Collection<Player> deletePlayerFromTeam(Long idPlayer, Long idTeam) {

@@ -2,10 +2,7 @@ package terrato.springframwork.domain;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by onenight on 2018-03-05.
@@ -19,4 +16,7 @@ public class Nationality {
     private Long id;
 
     private String state;
+
+    @OneToOne
+    private Team team;
 }

@@ -50,4 +50,10 @@ public class Team implements Comparable<Team>{
     public int compareTo(Team o) {
         return this.getPoints() < o.getPoints() ? 1 : (this.getPoints() > o.getPoints() ? -1 : 0);
     }
+
+    public Team addPlayer(Player player){
+        player.setTeam(this);
+        players.add(player);
+        return this;
+    }
 }

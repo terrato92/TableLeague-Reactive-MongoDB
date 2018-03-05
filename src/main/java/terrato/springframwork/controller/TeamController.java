@@ -74,9 +74,10 @@ public class TeamController {
 
     @RequestMapping("league/{leagueId}/team")
     public String saveOrUpdateTeam(@ModelAttribute Team team){
+
         Team updateTeam = teamService.saveTeam(team);
 
-        return "redirect:/league/" + updateTeam.getId() + "/team/" + team.getId();
+        return "redirect:/league/" + updateTeam.getLeague().getId() + "/team/" + updateTeam.getId()+"/show";
     }
 
     @GetMapping

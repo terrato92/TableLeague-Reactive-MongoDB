@@ -76,7 +76,7 @@ public class LeagueControllerTest {
 
         when(leagueService.getLeagueById(anyLong())).thenReturn(league);
 
-        mockMvc.perform(get("/league/1/show"))
+        mockMvc.perform(get("/leagues/1/show"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("league/show"));
     }

@@ -10,15 +10,11 @@ import java.util.Collection;
 public interface PlayerService {
 
 
-    Collection<Player> getPlayers();
-
     Collection<Player> getPlayersFromTeam(Long idTeam);
 
 
-    Collection<Player> addPlayerToTeam(Player player, Long idTeam);
+    Player savePlayerToTeam(Player player);
 
-
-    void deletePlayer(Long idPlayer);
 
     Collection<Player> deletePlayerFromTeam(Long idPlayer, Long idTeam);
 

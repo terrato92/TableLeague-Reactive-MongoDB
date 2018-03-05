@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import terrato.springframwork.domain.Player;
 import terrato.springframwork.domain.Team;
+import terrato.springframwork.repository.NationalityRepository;
 import terrato.springframwork.repository.PlayerRepository;
 import terrato.springframwork.repository.TeamRepository;
 import terrato.springframwork.service.PlayerService;
@@ -28,6 +29,9 @@ public class PlayerServiceImplTest {
     @Mock
     TeamRepository teamRepository;
 
+    @Mock
+    NationalityRepository nationalityRepository;
+
     PlayerService playerService;
 
 
@@ -35,7 +39,7 @@ public class PlayerServiceImplTest {
     public void setUpTest() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        playerService = new PlayerServiceImpl(playerRepository, teamRepository);
+        playerService = new PlayerServiceImpl(playerRepository, teamRepository, nationalityRepository);
     }
 
 

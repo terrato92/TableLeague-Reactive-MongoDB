@@ -29,4 +29,7 @@ public class Player {
     private Team team;
 
     private Position position;
+
+    @OneToOne
+    private Nationality state;
 }

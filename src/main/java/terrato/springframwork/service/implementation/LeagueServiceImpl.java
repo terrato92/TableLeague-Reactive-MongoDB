@@ -2,6 +2,7 @@ package terrato.springframwork.service.implementation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import terrato.springframwork.domain.League;
 import terrato.springframwork.repository.LeagueRepository;
 import terrato.springframwork.service.LeagueService;
@@ -32,9 +33,9 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     @Override
+    @Transactional
     public League getLeagueById(Long idLeague) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
-
         League league = leagueOptional.get();
         return league;
     }
@@ -42,6 +43,7 @@ public class LeagueServiceImpl implements LeagueService {
 
 
     @Override
+    @Transactional
     public League saveLeague(League league) {
         League league1 = leagueRepository.save(league);
 

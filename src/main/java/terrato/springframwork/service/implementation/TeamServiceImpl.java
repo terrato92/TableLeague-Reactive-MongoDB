@@ -30,27 +30,6 @@ public class TeamServiceImpl implements TeamService {
     }
 
 
-    @Override
-    public Set<Team> getTeams() {
-        Set<Team> teams = new HashSet<>();
-        teamRepository.findAll().forEach(teams::add);
-
-        return teams;
-    }
-
-    @Override
-    public Set<Team> getTeamsFromLeague(Long idLeague) {
-        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
-
-        if (leagueOptional.isPresent()) {
-            League league = leagueOptional.get();
-
-            return league.getTeams();
-        } else {
-            log.error("League doesn't exist");
-            throw new RuntimeException("League doesn't exist");
-        }
-    }
 
     @Override
     public Team findTeamById(Long idLeague, Long idTeam) {
