@@ -45,7 +45,7 @@ public class TeamController {
     }
 
     @GetMapping
-    @RequestMapping("league{leagueId}/teams")
+    @RequestMapping("league/{leagueId}/teams")
     public String getTeams(@PathVariable String leagueId, Model model){
 
         model.addAttribute("teams", leagueService.getLeagueById(Long.valueOf(leagueId)));
