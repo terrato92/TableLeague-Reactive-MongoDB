@@ -88,16 +88,16 @@ public class TeamControllerTest {
     @Test
     public void updateTeamFormTest() throws Exception {
 
-//        Team team = new Team();
-//
-//        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
-//        when(nationalityService.listAllStates()).thenReturn(new HashSet<>());
-//
-//        mockMvc.perform(get("/league/1/team/2/update"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("league/team/teamform"))
-//                .andExpect(model().attributeExists("team"))
-//                .andExpect(model().attributeExists("states"));
+        Team team = new Team();
+
+        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
+        when(nationalityService.listAllStates()).thenReturn(new HashSet<>());
+
+        mockMvc.perform(get("/league/1/team/2/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/league/team/teamform"))
+                .andExpect(model().attributeExists("team"))
+                .andExpect(model().attributeExists("states"));
 //
 
     }

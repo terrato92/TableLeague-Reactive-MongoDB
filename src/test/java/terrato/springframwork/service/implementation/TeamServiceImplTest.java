@@ -138,20 +138,20 @@ public class TeamServiceImplTest {
 
     @Test
     public void deleteTeamFromLeague() throws Exception {
-//        League league = new League();
-//        league.setId(1L);
-//        Team team = new Team();
-//        team.setId(1L);
-//        team.setLeague(league);
-//        league.addTeam(team);
-//
-//        when(leagueService.getLeagueById(team.getLeague().getId())).thenReturn(team.getLeague());
-//
-//        assertEquals(1, league.getTeams().size());
-//
-//        teamService.deleteTeamFromLeague(team.getLeague().getId(), team.getId());
-//
-//        assertTrue(leagueService.showLeagueTeams(team.getLeague().getId()).isEmpty());
+        League league = new League();
+        league.setId(1L);
+        Team team = new Team();
+        team.setId(1L);
+        team.setLeague(league);
+        league.addTeam(team);
+
+        when(leagueService.getLeagueById(team.getLeague().getId())).thenReturn(team.getLeague());
+
+        assertEquals(1, league.getTeams().size());
+
+        teamService.deleteTeamFromLeague(team.getLeague().getId(), team.getId());
+
+        assertTrue(leagueService.showLeagueTeams(team.getLeague().getId()).isEmpty());
     }
 
 

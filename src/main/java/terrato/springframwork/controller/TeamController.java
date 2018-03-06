@@ -30,7 +30,7 @@ public class TeamController {
         this.nationalityService = nationalityService;
     }
 
-    @GetMapping
+    @PostMapping
     @RequestMapping("league/{leagueId}/team/new")
     public String newTeam(@PathVariable String leagueId, Model model){
         League league = leagueService.getLeagueById(Long.valueOf(leagueId));
@@ -54,6 +54,7 @@ public class TeamController {
         return "league/team/list";
     }
 
+    @GetMapping
     @RequestMapping("league/{leagueId}/team/{teamId}/show")
     public String showLeagueTeamById (@PathVariable String leagueId,
                                       @PathVariable String teamId, Model model) {
@@ -63,7 +64,7 @@ public class TeamController {
     }
 
 
-    @GetMapping
+    @PostMapping
     @RequestMapping("league/{leagueId}/team/{teamId}/update")
     public String updateLeagueTeam(@PathVariable String leagueId,
                                    @PathVariable String teamId, Model model){

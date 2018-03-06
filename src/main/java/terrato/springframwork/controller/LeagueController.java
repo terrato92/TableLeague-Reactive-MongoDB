@@ -25,7 +25,7 @@ public class LeagueController {
 
     @GetMapping
     @RequestMapping({"", "/", "/index"})
-    public String showLeague(Model model){
+    public String showLeagues(Model model){
         model.addAttribute("leagues", leagueService.getLeagues());
 
         return "league/index";
@@ -39,6 +39,7 @@ public class LeagueController {
         return "league/show";
     }
 
+    @PostMapping
     @RequestMapping("league/new")
     public String newLeague(Model model) {
         model.addAttribute("league", new League());
@@ -53,6 +54,7 @@ public class LeagueController {
         return "redirect:/show";
     }
 
+    @PostMapping
     @RequestMapping("league/{leagueId}/update")
     public String updateLeague(@PathVariable String leagueId, Model model){
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(leagueId)));
