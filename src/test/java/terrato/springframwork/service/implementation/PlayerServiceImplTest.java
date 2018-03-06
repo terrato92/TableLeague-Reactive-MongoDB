@@ -61,6 +61,23 @@ public class PlayerServiceImplTest {
     }
 
     @Test
+    public void getTeamPlayerByIdTest() throws Exception {
+
+        Team team = new Team();
+        Set<Player> players = new HashSet<>();
+        Player player = new Player();
+        player.setId(1L);
+        players.add(player);
+        team.setPlayers(players);
+
+        when(teamRepository.findOne(anyLong())).thenReturn(team);
+
+        Player updatePlayer = playerService.getTeamPlayerById(team.getId(), player.getId());
+
+        assertEquals(player.getTeam(), updatePlayer.getTeam());
+    }
+
+    @Test
     public void getPlayersFromTeamTest() throws Exception {
         Team team = new Team();
         team.setId(1L);

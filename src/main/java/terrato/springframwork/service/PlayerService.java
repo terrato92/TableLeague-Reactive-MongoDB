@@ -9,6 +9,7 @@ import java.util.Collection;
  */
 public interface PlayerService {
 
+    Player getTeamPlayerById(Long idTeam, Long idPlayer);
 
     Collection<Player> getPlayersFromTeam(Long idTeam);
 

@@ -31,6 +31,9 @@ public class PlayerController {
         return "team/players/show";
     }
 
-
+//    @RequestMapping("player/{id}/show")
+//    public String showPlayerById (@PathVariable String id, Model model){
+//        model.addAttribute("player", )
+//    }
 
 }

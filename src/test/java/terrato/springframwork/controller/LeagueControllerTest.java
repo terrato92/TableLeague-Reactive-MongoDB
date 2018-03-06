@@ -59,7 +59,7 @@ public class LeagueControllerTest {
 
         ArgumentCaptor<Set> argumentCaptor = ArgumentCaptor.forClass(Set.class);
 
-        String viewName = leagueController.showLeague(model);
+        String viewName = leagueController.showLeagues(model);
 
         assertEquals("league/index", viewName);
         verify(leagueService, times(1)).getLeagues();
