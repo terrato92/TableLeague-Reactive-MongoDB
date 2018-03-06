@@ -4,8 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import terrato.springframwork.domain.BalanceOfMatches;
 import terrato.springframwork.domain.League;
 import terrato.springframwork.domain.Team;
 import terrato.springframwork.service.LeagueService;
@@ -17,6 +19,7 @@ import java.util.HashSet;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -108,16 +111,21 @@ public class TeamControllerTest {
 
     @Test
     public void saveOrUpdate() throws Exception {
-//        Team team = new Team();
-//        team.setId(2L);
-//        team.setLeague(new League());
-//
-//        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
-//
-//        mockMvc.perform(get("/league/1/team").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                .param("id", "2"))
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/league/1/team/2/show"));
+        Team team = new Team();
+        team.setId(1L);
+        team.setBalanceOfMatches(new BalanceOfMatches());
+        League league = new League();
+        league.setId(3L);
+        team.setLeague(league);
+        league.getTeams().add(team);
+
+        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
+
+        mockMvc.perform(post("/league/3/team").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("league", String.valueOf(league)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/league/3/team/2/show"));
 
     }
 
