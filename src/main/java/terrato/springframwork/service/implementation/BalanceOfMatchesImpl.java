@@ -69,7 +69,7 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
 
             return balanceOfMatches;
         } else {
-            throw new RuntimeException("gowno");
+            throw new RuntimeException("I can't find team with id: " + idTeam);
         }
 
     }
@@ -95,7 +95,7 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
             return balanceOfMatches;
 
         } else {
-            throw new RuntimeException("gowno");
+            throw new RuntimeException("I can't find team with id: " + idTeam);
         }
 
 

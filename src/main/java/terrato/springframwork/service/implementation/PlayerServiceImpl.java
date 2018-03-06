@@ -22,7 +22,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
-    private  final NationalityRepository nationalityRepository;
+    private final NationalityRepository nationalityRepository;
 
     public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, NationalityRepository nationalityRepository) {
         this.playerRepository = playerRepository;
@@ -50,6 +50,7 @@ public class PlayerServiceImpl implements PlayerService {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(player.getTeam().getId()));
 
         if (!teamOptional.isPresent()) {
+            log.error("I can't find team");
             return new Player();
 
         } else {
@@ -59,7 +60,7 @@ public class PlayerServiceImpl implements PlayerService {
                     .filter(player1 -> player1.getId().equals(player.getId()))
                     .findFirst();
 
-            if (playerOptional.isPresent()){
+            if (playerOptional.isPresent()) {
                 Player player1 = playerOptional.get();
                 player1.setTeam(player.getTeam());
                 player1.setName(player.getName());
@@ -68,17 +69,13 @@ public class PlayerServiceImpl implements PlayerService {
                 player1.setPosition(player.getPosition());
 
             } else {
-
                 team.addPlayer(player);
                 player.setTeam(team);
-
             }
-
         }
 
         return player;
     }
-
 
 
     @Override
@@ -93,7 +90,7 @@ public class PlayerServiceImpl implements PlayerService {
                     .findFirst();
 
             Player playerToDelete = playerOptional.get();
-
+            playerToDelete.setTeam(null);
             team.getPlayers().remove(playerToDelete);
 
             teamRepository.save(team);

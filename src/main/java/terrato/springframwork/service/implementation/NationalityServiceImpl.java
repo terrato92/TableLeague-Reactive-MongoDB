@@ -12,11 +12,11 @@ import java.util.Set;
  * Created by onenight on 2018-03-05.
  */
 @Service
-public class NatinalityServiceImpl implements NationalityService {
+public class NationalityServiceImpl implements NationalityService {
 
     private final NationalityRepository nationalityRepository;
 
-    public NatinalityServiceImpl(NationalityRepository nationalityRepository) {
+    public NationalityServiceImpl(NationalityRepository nationalityRepository) {
         this.nationalityRepository = nationalityRepository;
     }
 

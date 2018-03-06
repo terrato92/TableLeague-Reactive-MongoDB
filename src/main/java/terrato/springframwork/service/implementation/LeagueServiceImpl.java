@@ -35,25 +35,34 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public Set<Team> showLeagueTeams(Long idLeague) {
-        Set<Team> teamSet = leagueRepository.findOne(idLeague).getTeams();
-        return teamSet;
+        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
+
+        if (!leagueOptional.isPresent()) {
+            return leagueOptional.get().getTeams();
+        } else {
+            throw new RuntimeException("I can't find league with id: " + idLeague);
+        }
     }
 
     @Override
     @Transactional
     public League getLeagueById(Long idLeague) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
-        League league = leagueOptional.get();
-        return league;
+
+        if (!leagueOptional.isPresent()) {
+            return leagueOptional.get();
+
+        } else {
+            throw new RuntimeException("I can't find league with id: " + idLeague);
+        }
     }
 
 
     @Override
     @Transactional
     public League saveLeague(League league) {
-        League league1 = leagueRepository.save(league);
 
-        return league1;
+        return leagueRepository.save(league);
     }
 
 
