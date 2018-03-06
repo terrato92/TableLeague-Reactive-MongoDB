@@ -9,6 +9,7 @@ import terrato.springframwork.domain.Team;
 import terrato.springframwork.repository.LeagueRepository;
 import terrato.springframwork.repository.NationalityRepository;
 import terrato.springframwork.repository.TeamRepository;
+import terrato.springframwork.service.LeagueService;
 import terrato.springframwork.service.TeamService;
 
 import java.util.HashSet;
@@ -17,7 +18,8 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by onenight on 2018-03-04.
@@ -28,11 +30,15 @@ public class TeamServiceImplTest {
     TeamRepository teamRepository;
 
     @Mock
+    LeagueService leagueService;
+
+    @Mock
     NationalityRepository nationalityRepository;
 
     @Mock
     LeagueRepository leagueRepository;
 
+    @Mock
     TeamService teamService;
 
 
@@ -42,6 +48,7 @@ public class TeamServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         teamService = new TeamServiceImpl(leagueRepository, teamRepository, nationalityRepository);
+
     }
 
 
@@ -131,18 +138,20 @@ public class TeamServiceImplTest {
 
     @Test
     public void deleteTeamFromLeague() throws Exception {
-        League league = new League();
-        league.setId(3L);
-
-        Team team = new Team();
-        team.setId(2L);
-        team.setLeague(league);
-
-        when(teamRepository.findOne(anyLong())).thenReturn(team);
-
-        teamService.deleteTeamFromLeague(league.getId(), team.getId());
-
-        assertTrue(league.getTeams().isEmpty());
+//        League league = new League();
+//        league.setId(1L);
+//        Team team = new Team();
+//        team.setId(1L);
+//        team.setLeague(league);
+//        league.addTeam(team);
+//
+//        when(leagueService.getLeagueById(team.getLeague().getId())).thenReturn(team.getLeague());
+//
+//        assertEquals(1, league.getTeams().size());
+//
+//        teamService.deleteTeamFromLeague(team.getLeague().getId(), team.getId());
+//
+//        assertTrue(leagueService.showLeagueTeams(team.getLeague().getId()).isEmpty());
     }
 
 

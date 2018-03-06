@@ -1,17 +1,17 @@
 package terrato.springframwork.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import terrato.springframwork.domain.League;
 import terrato.springframwork.domain.Nationality;
 import terrato.springframwork.domain.Team;
 import terrato.springframwork.service.LeagueService;
 import terrato.springframwork.service.NationalityService;
 import terrato.springframwork.service.TeamService;
+
+import javax.validation.Valid;
 
 /**
  * Created by onenight on 2018-03-04.
@@ -23,6 +23,7 @@ public class TeamController {
     private final LeagueService leagueService;
     private final NationalityService nationalityService;
 
+    @Autowired
     public TeamController(TeamService teamService, LeagueService leagueService, NationalityService nationalityService) {
         this.teamService = teamService;
         this.leagueService = leagueService;
@@ -48,7 +49,7 @@ public class TeamController {
     @RequestMapping("league/{leagueId}/teams")
     public String getTeams(@PathVariable String leagueId, Model model){
 
-        model.addAttribute("teams", leagueService.getLeagueById(Long.valueOf(leagueId)));
+        model.addAttribute("teams", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
 
         return "league/team/list";
     }
@@ -62,6 +63,7 @@ public class TeamController {
     }
 
 
+    @GetMapping
     @RequestMapping("league/{leagueId}/team/{teamId}/update")
     public String updateLeagueTeam(@PathVariable String leagueId,
                                    @PathVariable String teamId, Model model){
@@ -69,13 +71,14 @@ public class TeamController {
 
         model.addAttribute("states", nationalityService.listAllStates());
 
-        return "league/team/teamform";
+        return "redirect:/league/team/teamform";
     }
 
+    @PostMapping
     @RequestMapping("league/{leagueId}/team")
-    public String saveOrUpdateTeam(@ModelAttribute Team team){
+    public String saveOrUpdateTeam(@Valid @ModelAttribute("team") Team team){
 
-        Team updateTeam = teamService.saveTeam(team);
+        Team updateTeam = teamService.findTeamById(team.getLeague().getId(), team.getLeague().getId());
 
         return "redirect:/league/" + updateTeam.getLeague().getId() + "/team/" + updateTeam.getId()+"/show";
     }
@@ -95,10 +98,10 @@ public class TeamController {
                                        @PathVariable String teamId){
         teamService.deleteTeamFromLeague(Long.valueOf(leagueId), Long.valueOf(teamId));
 
-        return "redirect:/league/" + leagueId + "teams";
+        return "redirect:/league/" + leagueId + "/teams";
     }
 
-    @RequestMapping("team/{id}/delete")
+    @RequestMapping("team/{id}/remove")
     public String deleteById(@PathVariable String id){
         teamService.deleteTeam(Long.valueOf(id));
 

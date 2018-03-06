@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import terrato.springframwork.domain.League;
+import terrato.springframwork.domain.Team;
 import terrato.springframwork.repository.LeagueRepository;
 import terrato.springframwork.service.LeagueService;
 
@@ -33,6 +34,12 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     @Override
+    public Set<Team> showLeagueTeams(Long idLeague) {
+        Set<Team> teamSet = leagueRepository.findOne(idLeague).getTeams();
+        return teamSet;
+    }
+
+    @Override
     @Transactional
     public League getLeagueById(Long idLeague) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
@@ -57,6 +64,7 @@ public class LeagueServiceImpl implements LeagueService {
         League league1 = leagueOptional.get();
         leagueRepository.delete(league1);
     }
+
 
 
 }

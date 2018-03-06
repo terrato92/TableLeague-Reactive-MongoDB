@@ -75,6 +75,7 @@ public class TeamServiceImpl implements TeamService {
                 teamOptional.get().setState(nationalityRepository.findOne(source.getState().getId()));
 
             } else {
+
                 Team team = new Team();
                 team.setLeague(league);
                 league.getTeams().add(team);
@@ -109,6 +110,7 @@ public class TeamServiceImpl implements TeamService {
             Team team = teamOptional.get();
             team.setLeague(leagueOptional.get());
 
+            leagueRepository.save(leagueOptional.get());
             teamRepository.save(team);
             return team;
         } else {
@@ -117,6 +119,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @Transactional
     public void deleteTeamFromLeague(Long idLeague, Long idTeam) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
@@ -131,6 +134,8 @@ public class TeamServiceImpl implements TeamService {
             if (teamOptional.isPresent()) {
                 Team teamToDelete = teamOptional.get();
                 league.getTeams().remove(teamToDelete);
+                teamToDelete.setLeague(null);
+                teamRepository.delete(teamToDelete);
                 leagueRepository.save(league);
             }
         }
