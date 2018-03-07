@@ -49,7 +49,7 @@ public class LeagueServiceImpl implements LeagueService {
     public League getLeagueById(Long idLeague) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
-        if (!leagueOptional.isPresent()) {
+        if (leagueOptional.isPresent()) {
             return leagueOptional.get();
 
         } else {

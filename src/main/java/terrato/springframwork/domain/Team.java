@@ -3,6 +3,7 @@ package terrato.springframwork.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -25,7 +26,7 @@ public class Team implements Comparable<Team>{
 
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", fetch = FetchType.LAZY)
-    private Set<Player> players;
+    private Set<Player> players = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "balance_id")

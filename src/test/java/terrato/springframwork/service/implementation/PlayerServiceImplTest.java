@@ -12,6 +12,7 @@ import terrato.springframwork.repository.TeamRepository;
 import terrato.springframwork.service.PlayerService;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -127,6 +128,30 @@ public class PlayerServiceImplTest {
         assertTrue(team.getPlayers().isEmpty());
 
         assertNotNull(player);
+    }
+
+    @Test
+    public void savePlayerTest(){
+        Team team = new Team();
+        team.setId(2L);
+
+        Player player = new Player();
+        player.setId(1L);
+        player.setTeam(team);
+
+        Optional<Team> teamOptional = Optional.of(new Team());
+
+        Team savedTeam = new Team();
+        savedTeam.setId(5L);
+        savedTeam.addPlayer(player);
+        savedTeam.getPlayers().iterator().next().setId(2L);
+
+        when(teamRepository.findOne(anyLong())).thenReturn(teamOptional.get());
+        when(teamRepository.save((Team) any())).thenReturn(savedTeam);
+
+        Player player1 = playerService.savePlayer(player);
+
+        assertEquals(player.getId(), player1.getId());
 
     }
 

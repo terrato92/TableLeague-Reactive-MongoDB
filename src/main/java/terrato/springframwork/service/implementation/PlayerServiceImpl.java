@@ -48,14 +48,14 @@ public class PlayerServiceImpl implements PlayerService {
     public Player getTeamPlayerById(Long idTeam, Long idPlayer) {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
 
-        if (!teamOptional.isPresent()){
+        if (!teamOptional.isPresent()) {
             throw new RuntimeException("Team doesn't exist");
         } else {
             Team team = teamOptional.get();
 
             Optional<Player> playerOptional = team.getPlayers().stream().filter(player -> player.getId().equals(idPlayer)).findFirst();
 
-            if (!playerOptional.isPresent()){
+            if (!playerOptional.isPresent()) {
                 throw new RuntimeException("Player doesn't exist");
             } else {
                 return playerOptional.get();
@@ -65,36 +65,40 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional
-    public Player savePlayerToTeam(Player player) {
+    public Player savePlayer(Player player) {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(player.getTeam().getId()));
 
         if (!teamOptional.isPresent()) {
-            log.error("I can't find team");
-            return new Player();
-
+            throw new RuntimeException("Team doesn't exist");
         } else {
             Team team = teamOptional.get();
 
-            Optional<Player> playerOptional = team.getPlayers().stream()
-                    .filter(player1 -> player1.getId().equals(player.getId()))
+            Optional<Player> playerOptional = team
+                    .getPlayers()
+                    .stream()
+                    .filter(player3 -> player3.getId().equals(player.getId()))
                     .findFirst();
 
             if (playerOptional.isPresent()) {
                 Player player1 = playerOptional.get();
                 player1.setTeam(player.getTeam());
                 player1.setName(player.getName());
+
                 player1.setState(nationalityRepository.findOne(player.getState().getId()));
+
                 player1.setAge(player.getAge());
                 player1.setPosition(player.getPosition());
+                return player1;
 
             } else {
                 team.addPlayer(player);
                 player.setTeam(team);
+
+                return player;
             }
         }
-
-        return player;
     }
+
 
 
     @Override

@@ -59,7 +59,7 @@ public class LeagueServiceImplTest {
 
         when(leagueRepository.findOne(anyLong())).thenReturn(leagueOptional.get());
 
-        League returnedLeague = leagueService.getLeagueById(2L);
+        League returnedLeague = leagueService.getLeagueById(league.getId());
 
         assertNotNull("NULL returned", returnedLeague);
         verify(leagueRepository, times(1)).findOne(anyLong());
