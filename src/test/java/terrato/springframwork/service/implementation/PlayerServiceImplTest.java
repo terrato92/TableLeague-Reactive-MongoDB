@@ -84,16 +84,15 @@ public class PlayerServiceImplTest {
         team.setId(1L);
 
         Player player = new Player();
+        Player player1 = new Player();
+        player1.setId(3L);
         player.setId(2L);
 
-        Set<Player> players = new HashSet<>();
-        players.add(player);
-
-        team.setPlayers(players);
+        team.addPlayer(player1);
+        team.addPlayer(player);
 
         assertFalse(team.getPlayers().isEmpty());
-        assertEquals(1, team.getPlayers().size());
-
+        assertEquals(2, team.getPlayers().size());
     }
 
     @Test

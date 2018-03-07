@@ -11,6 +11,7 @@ import java.util.Set;
  */
 public interface PlayerRepository extends CrudRepository<Player, Long> {
 
-    Optional<Set<Player>> getByTeamId(Long idTeam);
+    Optional<Set<Player>> getAllByTeamId(Long idTeam);
+
 
 }

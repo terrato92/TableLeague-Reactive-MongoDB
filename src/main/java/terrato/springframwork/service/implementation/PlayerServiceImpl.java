@@ -35,7 +35,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Collection<Player> getPlayersFromTeam(Long idTeam) {
-        Optional<Set<Player>> playerOptional = playerRepository.getByTeamId(idTeam);
+        Optional<Set<Player>> playerOptional = playerRepository.getAllByTeamId(idTeam);
 
         if (playerOptional.isPresent()) {
             return playerOptional.get();

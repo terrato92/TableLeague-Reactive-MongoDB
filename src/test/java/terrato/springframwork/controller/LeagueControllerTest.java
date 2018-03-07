@@ -61,7 +61,7 @@ public class LeagueControllerTest {
 
         String viewName = leagueController.showLeagues(model);
 
-        assertEquals("league/index", viewName);
+        assertEquals("index", viewName);
         verify(leagueService, times(1)).getLeagues();
         verify(model, times(1)).addAttribute(eq("leagues"), argumentCaptor.capture());
 
@@ -76,7 +76,7 @@ public class LeagueControllerTest {
 
         when(leagueService.getLeagueById(anyLong())).thenReturn(league);
 
-        mockMvc.perform(get("/leagues/1/show"))
+        mockMvc.perform(get("/league/1/show"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("league/show"));
     }
@@ -86,7 +86,7 @@ public class LeagueControllerTest {
 
         mockMvc.perform(get("/league/new"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("league/show"));
+                .andExpect(view().name("league/leagueform"));
     }
 
     @Test
