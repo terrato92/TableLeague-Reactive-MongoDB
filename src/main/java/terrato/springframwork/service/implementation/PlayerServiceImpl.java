@@ -12,6 +12,7 @@ import terrato.springframwork.service.PlayerService;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by onenight on 2018-03-03.
@@ -34,10 +35,10 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Collection<Player> getPlayersFromTeam(Long idTeam) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
+        Optional<Set<Player>> playerOptional = playerRepository.getByTeamId(idTeam);
 
-        if (teamOptional.isPresent()) {
-            return teamOptional.get().getPlayers();
+        if (playerOptional.isPresent()) {
+            return playerOptional.get();
         } else {
             log.error("Team with id: " + idTeam + " doesn't exist");
             throw new RuntimeException("I can't find team with id: " + idTeam);
