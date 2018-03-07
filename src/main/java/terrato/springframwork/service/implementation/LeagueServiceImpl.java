@@ -70,7 +70,7 @@ public class LeagueServiceImpl implements LeagueService {
     public void deleteLeagueById(Long idLeague) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
-        if (!leagueOptional.isPresent()) {
+        if (leagueOptional.isPresent()) {
             League league1 = leagueOptional.get();
             leagueRepository.delete(league1);
         } else {

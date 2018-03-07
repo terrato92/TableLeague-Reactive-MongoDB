@@ -47,14 +47,14 @@ public class LeagueController {
         return "league/leagueform";
     }
 
-    @GetMapping
+    @PostMapping
     @RequestMapping("league/{id}/delete")
     public String deleteLeague(@PathVariable String id){
         leagueService.deleteLeagueById(Long.valueOf(id));
         return "redirect:/show";
     }
 
-    @PostMapping
+    @PutMapping
     @RequestMapping("league/{leagueId}/update")
     public String updateLeague(@PathVariable String leagueId, Model model){
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(leagueId)));
