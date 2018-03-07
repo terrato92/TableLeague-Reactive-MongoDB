@@ -28,11 +28,11 @@ public class LeagueController {
     public String showLeagues(Model model){
         model.addAttribute("leagues", leagueService.getLeagues());
 
-        return "league/index";
+        return "index";
     }
 
     @GetMapping
-    @RequestMapping("leagues/{id}/show")
+    @RequestMapping("league/{id}/show")
     public String showLeagueById(@PathVariable String id, Model model) {
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(id)));
 
@@ -44,7 +44,7 @@ public class LeagueController {
     public String newLeague(Model model) {
         model.addAttribute("league", new League());
 
-        return "league/show";
+        return "league/leagueform";
     }
 
     @GetMapping

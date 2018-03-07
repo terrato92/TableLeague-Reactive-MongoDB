@@ -20,7 +20,7 @@ public class League {
     private Long id;
 
     @Column(name = "league_name")
-    private final String NAME = "Premier League";
+    private String name;
 
     @Size(min = 19, max = 22)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "league")
