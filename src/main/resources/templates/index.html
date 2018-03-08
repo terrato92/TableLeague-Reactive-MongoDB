@@ -55,9 +55,9 @@
                                         <td th:text="${league.id}">785</td>
                                         <td th:text="${league.name}">League France</td>
                                         <td><a href="#" th:href="@{'/league/' + ${league.id} + '/show'}">View</a></td>
-                                        <td><a href="#" th:href="@{'/league/ + ${league.id} + '/update'}">Update</a>
+                                        <td><a href="#" th:href="@{'/league/' + ${league.id} + '/update'}">Update</a>
                                         </td>
-                                        <td><a href="#" th:href="@{'/league/ + ${league.id} + '/delete'}">Delete</a>
+                                        <td><a href="#" th:href="@{'/league/' + ${league.id} + '/delete'}">Delete</a>
                                         </td>
                                     </tr>
                                 </table>

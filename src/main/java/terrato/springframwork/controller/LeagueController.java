@@ -51,7 +51,7 @@ public class LeagueController {
     @RequestMapping("league/{id}/delete")
     public String deleteLeague(@PathVariable String id){
         leagueService.deleteLeagueById(Long.valueOf(id));
-        return "redirect:/show";
+        return "redirect:/";
     }
 
     @PutMapping
