@@ -73,7 +73,7 @@ public class LeagueController {
 
         League savedLeague = leagueService.saveLeague(league);
 
-        return "redirect:/league/" + savedLeague.getId() + "/show";
+        return "redirect:/";
 
     }
 

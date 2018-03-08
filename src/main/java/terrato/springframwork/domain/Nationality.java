@@ -17,6 +17,4 @@ public class Nationality {
 
     private String state;
 
-    @OneToOne
-    private Team team;
 }

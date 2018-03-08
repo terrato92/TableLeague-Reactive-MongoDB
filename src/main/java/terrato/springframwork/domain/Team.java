@@ -57,4 +57,12 @@ public class Team implements Comparable<Team>{
         players.add(player);
         return this;
     }
+
+    public Team(){
+
+    }
+
+    public Team(String name) {
+        this.name = name;
+    }
 }

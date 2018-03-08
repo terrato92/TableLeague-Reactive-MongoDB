@@ -3,7 +3,6 @@ package terrato.springframwork.domain;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,12 +21,18 @@ public class League {
     @Column(name = "league_name")
     private String name;
 
-    @Size(min = 19, max = 22)
+    @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
+
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "league")
     private Set<Team> teams = new HashSet<>();
 
     @Lob
     private Byte[] image;
+
+    @OneToOne
+    public Nationality state;
 
     public League addTeam(Team team){
         team.setLeague(this);
