@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import terrato.springframwork.domain.League;
+import terrato.springframwork.domain.Team;
 import terrato.springframwork.repository.LeagueRepository;
 import terrato.springframwork.service.LeagueService;
 
@@ -82,6 +83,23 @@ public class LeagueServiceImplTest {
         leagueRepository.delete(anyLong());
 
         verify(leagueRepository, times(1)).delete(anyLong());
+    }
+
+
+    @Test
+    public void getLeagueTeamsTest(){
+        League league = new League();
+        league.setId(1L);
+        league.addTeam(new Team());
+        Team team2 = new Team();
+        team2.setId(5L);
+        league.addTeam(team2);
+
+        when(leagueRepository.findOne(anyLong())).thenReturn(league);
+
+        assertEquals(2, leagueService.showLeagueTeams(league.getId()).size());
+
+
     }
 
 }

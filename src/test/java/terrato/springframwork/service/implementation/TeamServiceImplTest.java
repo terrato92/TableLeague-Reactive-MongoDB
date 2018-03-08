@@ -53,28 +53,6 @@ public class TeamServiceImplTest {
 
 
     @Test
-    public void getTeamsFromLeague() throws Exception {
-        League league = new League();
-        league.setId(3L);
-
-        Team team1 = new Team();
-        team1.setId(1L);
-        team1.setLeague(league);
-        Team team2 = new Team();
-        team2.setId(2L);
-        team2.setLeague(league);
-
-        Set<Team> teams = new HashSet<>();
-        teams.add(team1);
-        teams.add(team2);
-
-        league.setTeams(teams);
-
-       assertNotNull("NUll", league.getTeams());
-       assertEquals(2, league.getTeams().stream().filter(team -> team.getLeague().equals(league)).count());
-    }
-
-    @Test
     public void findLeagueTeamById() throws Exception {
         Team team = new Team();
         team.setId(2L);
