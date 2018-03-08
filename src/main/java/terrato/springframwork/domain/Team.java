@@ -10,9 +10,10 @@ import java.util.Set;
  * Created by onenight on 2018-03-02.
  */
 
+
 @Getter
-@EqualsAndHashCode(exclude = "league")
 @Setter
+@EqualsAndHashCode(exclude = "league")
 @Table
 @Entity
 public class Team implements Comparable<Team>{
@@ -21,7 +22,7 @@ public class Team implements Comparable<Team>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "team_name")
+    @Column(nullable = false)
     private String name;
 
 
@@ -30,7 +31,7 @@ public class Team implements Comparable<Team>{
 
     @OneToOne
     @JoinColumn(name = "balance_id")
-    private BalanceOfMatches balanceOfMatches;
+    private BalanceOfMatches balanceOfMatches = new BalanceOfMatches();
 
 
     @Transient
