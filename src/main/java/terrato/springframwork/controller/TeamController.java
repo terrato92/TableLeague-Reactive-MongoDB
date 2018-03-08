@@ -46,12 +46,12 @@ public class TeamController {
     }
 
     @GetMapping
-    @RequestMapping("league/{leagueId}/teams")
+    @RequestMapping("league/{leagueId}/teams/show")
     public String getTeams(@PathVariable String leagueId, Model model){
 
         model.addAttribute("teams", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
 
-        return "league/team/list";
+        return "league/team/show";
     }
 
     @GetMapping

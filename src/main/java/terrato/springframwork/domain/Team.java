@@ -22,14 +22,14 @@ public class Team implements Comparable<Team>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", fetch = FetchType.LAZY)
     private Set<Player> players = new HashSet<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "balance_id")
     private BalanceOfMatches balanceOfMatches = new BalanceOfMatches();
 

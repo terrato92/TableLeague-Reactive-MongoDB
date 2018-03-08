@@ -24,7 +24,6 @@ public class League {
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "league")
     private Set<Team> teams = new HashSet<>();
 

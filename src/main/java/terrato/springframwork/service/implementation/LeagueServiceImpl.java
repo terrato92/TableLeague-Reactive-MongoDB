@@ -37,7 +37,7 @@ public class LeagueServiceImpl implements LeagueService {
     public Set<Team> showLeagueTeams(Long idLeague) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
-        if (!leagueOptional.isPresent()) {
+        if (leagueOptional.isPresent()) {
             return leagueOptional.get().getTeams();
         } else {
             throw new RuntimeException("I can't find league with id: " + idLeague);
