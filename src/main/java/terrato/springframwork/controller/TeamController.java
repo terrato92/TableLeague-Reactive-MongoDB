@@ -30,7 +30,7 @@ public class TeamController {
 
     @GetMapping
     @RequestMapping("league/{leagueId}/team/new")
-    public String newTeam(@PathVariable String leagueId, Model model){
+    public String newTeam(@PathVariable String leagueId, Model model) {
         League league = new League();
         league.setId(Long.valueOf(leagueId));
 
@@ -46,7 +46,7 @@ public class TeamController {
 
     @GetMapping
     @RequestMapping("league/{leagueId}/teams")
-    public String getTeams(@PathVariable String leagueId, Model model){
+    public String getTeams(@PathVariable String leagueId, Model model) {
 
         model.addAttribute("leagues", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
 
@@ -57,38 +57,38 @@ public class TeamController {
 
     @GetMapping
     @RequestMapping("league/{leagueId}/team/{teamId}/show")
-    public String showLeagueTeamById (@PathVariable String leagueId,
-                                      @PathVariable String teamId, Model model) {
+    public String showLeagueTeamById(@PathVariable String leagueId,
+                                     @PathVariable String teamId, Model model) {
         model.addAttribute("team", teamService.findTeamById(Long.valueOf(leagueId), Long.valueOf(teamId)));
 
         return "league/team/show";
     }
 
 
-    @PostMapping
+    @GetMapping
     @RequestMapping("league/{leagueId}/team/{teamId}/update")
     public String updateLeagueTeam(@PathVariable String leagueId,
-                                   @PathVariable String teamId, Model model){
+                                   @PathVariable String teamId, Model model) {
         model.addAttribute("team", teamService.findTeamById(Long.valueOf(leagueId), Long.valueOf(teamId)));
 
         model.addAttribute("states", nationalityService.listAllStates());
 
-        return "redirect:/league/team/teamform";
+        return "league/team/teamform";
     }
 
     @PostMapping
     @RequestMapping("league/{leagueId}/team")
-    public String saveOrUpdateTeam(@ModelAttribute Team team){
+    public String saveOrUpdateTeam(@ModelAttribute Team team) {
 
         Team updateTeam = teamService.saveTeam(team);
 
-        return "redirect:/league/" + updateTeam.getLeague().getId() + "/team/" + updateTeam.getId()+"/list";
+        return "redirect:/league/" + updateTeam.getLeague().getId() + "/team/" + updateTeam.getId() + "/list";
     }
 
     @GetMapping
     @RequestMapping("league/{leagueId}/team/{teamId}")
     public String addTeamToLeague(@PathVariable String leagueId,
-                                  @PathVariable String teamId, Model model){
+                                  @PathVariable String teamId, Model model) {
         model.addAttribute("team", teamService.addTeamToLeague(Long.valueOf(leagueId), Long.valueOf(teamId)));
 
         return "team/" + teamId + "/show";
@@ -97,21 +97,21 @@ public class TeamController {
     @GetMapping
     @RequestMapping("league/{leagueId}/team/{teamId}/delete")
     public String deleteLeagueTeam(@PathVariable String leagueId,
-                                       @PathVariable String teamId){
+                                   @PathVariable String teamId) {
         teamService.deleteTeamFromLeague(Long.valueOf(leagueId), Long.valueOf(teamId));
 
         return "redirect:/league/" + leagueId + "/teams";
     }
 
     @RequestMapping("team/{id}/remove")
-    public String deleteById(@PathVariable String id){
+    public String deleteById(@PathVariable String id) {
         teamService.deleteTeam(Long.valueOf(id));
 
         return "teams/list";
     }
 
     @RequestMapping("league/{id}/sort")
-    public String sortLeague(@PathVariable String id, Model model){
+    public String sortLeague(@PathVariable String id, Model model) {
         model.addAttribute("league_list", teamService.setTeamByPoints(Long.valueOf(id)));
 
         return "league/show";
