@@ -51,6 +51,8 @@ public class TeamController {
 
         model.addAttribute("leagues", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
 
+        model.addAttribute("teams", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
+
         return "league/team/list";
     }
 
