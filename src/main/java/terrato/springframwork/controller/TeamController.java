@@ -11,8 +11,6 @@ import terrato.springframwork.service.LeagueService;
 import terrato.springframwork.service.NationalityService;
 import terrato.springframwork.service.TeamService;
 
-import javax.validation.Valid;
-
 /**
  * Created by onenight on 2018-03-04.
  */
@@ -30,10 +28,11 @@ public class TeamController {
         this.nationalityService = nationalityService;
     }
 
-    @PostMapping
+    @GetMapping
     @RequestMapping("league/{leagueId}/team/new")
     public String newTeam(@PathVariable String leagueId, Model model){
-        League league = leagueService.getLeagueById(Long.valueOf(leagueId));
+        League league = new League();
+        league.setId(Long.valueOf(leagueId));
 
         Team team = new Team();
         team.setLeague(league);
@@ -74,16 +73,16 @@ public class TeamController {
 
         model.addAttribute("states", nationalityService.listAllStates());
 
-        return "league/team/teamform";
+        return "redirect:/league/team/teamform";
     }
 
     @PostMapping
     @RequestMapping("league/{leagueId}/team")
-    public String saveOrUpdateTeam(@Valid @ModelAttribute("team") Team team){
+    public String saveOrUpdateTeam(@ModelAttribute Team team){
 
-        Team updateTeam = teamService.findTeamById(team.getLeague().getId(), team.getLeague().getId());
+        Team updateTeam = teamService.saveTeam(team);
 
-        return "redirect:/league/" + updateTeam.getLeague().getId() + "/team/" + updateTeam.getId()+"/show";
+        return "redirect:/league/" + updateTeam.getLeague().getId() + "/team/" + updateTeam.getId()+"/list";
     }
 
     @GetMapping
