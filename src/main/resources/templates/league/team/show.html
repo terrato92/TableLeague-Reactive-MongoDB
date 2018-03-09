@@ -16,63 +16,68 @@
             crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
 </head>
 <body>
-<!--/*@thymesVar id="recipe" type="terrato.springframework.domain.Recipe"*/-->
+<!--/*@thymesVar id="league" type="terrato.springframwork.domain.League"*/-->
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <div class="pannel-group">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <h1 class="panel-title" th:text="${league.name}"></h1>
-                            </div>
-
-                            <!--<div class="col-md-1">-->
-                            <!--<a class="btn btn-default" href="#"-->
-                            <!--th:href="@{'/league/' + ${league.id} + '/image'}" role="button">Change Image</a>-->
-                            <!--</div>-->
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p th:text="'Difficult level: ' + ${league.difficulty}">Easy</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-11 ">
-                            <h1 class="panel-title">Teams</h1>
+                        <div class="col-md-11">
+                            <tr th:each="league : ${leagues}">
+                                <h1 class="panel-title" th:text="${league.name}"></h1>
+                            </tr>
                         </div>
-                        <div class="col-md-1">
-                            <a class="btn btn-default" href="#"
-                               th:href="@{'/league/' + ${league.id} + '/teams/show'}" role="button">View</a>
-                        </div>
+
+                        <!--<div class="col-md-1">-->
+                        <!--<a class="btn btn-default" href="#"-->
+                        <!--th:href="@{'/league/' + ${league.id} + '/image'}" role="button">Change Image</a>-->
+                        <!--</div>-->
                     </div>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-12">
-                            <ul>
-                                <li th:each="team : ${league.teams}"
-                                    th:text="${(team.getName()
-
-
-                                        )}">
-                                </li>
-                            </ul>
+                        <div class="col-md-3">
+                            <tr th:each="league : ${leagues}">
+                                <p th:text="'Difficult level: ' + ${league.difficulty}">Easy</p>
+                            </tr>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-10 ">
+                        <h1 class="panel-title">Teams</h1>
+                    </div>
+                    <div class="col-md-1">
+                        <tr th:each="league : ${leagues}">
+                        <a class="btn btn-default" href="#"
+                           th:href="@{'/league/' + ${league.id} + '/teams'}" role="button">View</a>
 
+                        <!--/*@thymesVar id="league" type="terrato.springframwork.domain.League"*/-->
+                        <li th:each="team : ${league.teams}">
+                            <!--/*@thymesVar id="league" type="terrato.springframwork.domain.League"*/-->
+                            <td th:text="${team.id} + ' ' + ${team.id}">334</td>
+                            <td><a href="#"
+                                   th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/show'}">View</a>
+                            </td>
+                            <td><a href="#"
+                                   th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/update'}">Update</a>
+                            </td>
+                            <td><a href="#"
+                                   th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/delete'}">Delete</a>
+                            </td>
+                        </li>
+                    </tr>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>

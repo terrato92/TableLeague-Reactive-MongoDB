@@ -51,7 +51,7 @@
                                         <td><a href="#">View</a></td>
                                     </tr>
                                     <tr th:each="league : ${leagues}">
-                                        <!--/*@thymesVar id="league" type="terrato.springframework.domain.League"*/-->
+                                        <!--/*@thymesVar id="league" type="terrato.springframwork.domain.League"*/-->
                                         <td th:text="${league.id}">785</td>
                                         <td th:text="${league.name}">League France</td>
                                         <td><a href="#" th:href="@{'/league/' + ${league.id} + '/show'}">View</a></td>

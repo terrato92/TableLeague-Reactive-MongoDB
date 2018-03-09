@@ -46,12 +46,12 @@ public class TeamController {
     }
 
     @GetMapping
-    @RequestMapping("league/{leagueId}/teams/show")
+    @RequestMapping("league/{leagueId}/teams")
     public String getTeams(@PathVariable String leagueId, Model model){
 
-        model.addAttribute("teams", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
+        model.addAttribute("league", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
 
-        return "league/team/show";
+        return "league/team/list";
     }
 
     @GetMapping
@@ -72,7 +72,7 @@ public class TeamController {
 
         model.addAttribute("states", nationalityService.listAllStates());
 
-        return "redirect:/league/team/teamform";
+        return "league/team/teamform";
     }
 
     @PostMapping

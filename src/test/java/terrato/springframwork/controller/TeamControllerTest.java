@@ -80,7 +80,7 @@ public class TeamControllerTest {
         mockMvc.perform(get("/league/1/teams"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("league/team/list"))
-                .andExpect(model().attributeExists("teams"));
+                .andExpect(model().attributeExists("league"));
 
 
     }

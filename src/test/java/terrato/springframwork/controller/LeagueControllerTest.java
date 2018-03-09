@@ -78,7 +78,7 @@ public class LeagueControllerTest {
 
         mockMvc.perform(get("/league/1/show"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("index"));
+                .andExpect(view().name("league/show"));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class LeagueControllerTest {
 
         mockMvc.perform(get("/league/1/delete"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/show"));
+                .andExpect(view().name("redirect:/"));
 
         verify(leagueService, times(1)).deleteLeagueById(anyLong());
     }
