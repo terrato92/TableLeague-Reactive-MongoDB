@@ -24,13 +24,13 @@ public class PlayerController {
         this.nationalityService = nationalityService;
     }
 
-    @GetMapping
-    @RequestMapping("team/{teamId}/show")
-    public String showTeamPlayersById(@PathVariable String teamId, Model model) {
-        model.addAttribute("teams", playerService.getPlayersFromTeam(Long.valueOf(teamId)));
-
-        return "team/players/show";
-    }
+//    @GetMapping
+//    @RequestMapping("team/{teamId}/show")
+//    public String showTeamPlayersById(@PathVariable String teamId, Model model) {
+//        model.addAttribute("teams", playerService.getPlayersFromTeam(Long.valueOf(teamId)));
+//
+//        return "team/players/show";
+//    }
 
     @GetMapping
     @RequestMapping("team/{teamId}/player/{playerId}/show")

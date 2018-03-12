@@ -1,5 +1,6 @@
 package terrato.springframework.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import terrato.springframework.domain.Team;
 
 import java.util.Collection;
@@ -14,9 +15,11 @@ public interface TeamService {
 
     Set<Team> findTeamByLeagueId(Long idLeague);
 
-    Team saveTeam(Team teamSource);
 
-    Team addTeamToLeague(Long leagueId, Long teamId);
+    Team findTeamById(Long idTeam);
+
+    @Transactional
+    Team saveTeam(Team source, Long idLeague);
 
     void deleteTeamFromLeague(Long idLeague, Long idTeam);
 

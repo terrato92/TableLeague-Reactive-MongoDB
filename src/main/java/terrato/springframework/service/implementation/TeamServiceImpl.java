@@ -10,7 +10,9 @@ import terrato.springframework.repository.NationalityRepository;
 import terrato.springframework.repository.TeamRepository;
 import terrato.springframework.service.TeamService;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by onenight on 2018-03-03.
@@ -45,15 +47,26 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public Team findTeamById(Long idTeam) {
+        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
+
+        if (!teamOptional.isPresent()){
+            throw new RuntimeException("No team");
+        } else {
+            return teamOptional.get();
+        }
+    }
+
+    @Override
     @Transactional
-    public Team saveTeam(Team source) {
+    public Team saveTeam(Team source, Long idLeague) {
 //        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(source.getId()));
 
-        Optional<League> leagueOptional = Optional.ofNullable((leagueRepository.findOne(source.getLeague().getId())));
+        Optional<League> leagueOptional = Optional.ofNullable((leagueRepository.findOne(idLeague)));
 
         if (!leagueOptional.isPresent()) {
             log.error("League with id " + source.getId() + " doesn't exist");
-            return new Team();
+            throw new RuntimeException("brak ligi");
         } else {
 
             League league = leagueOptional.get();
@@ -66,54 +79,24 @@ public class TeamServiceImpl implements TeamService {
 
                 teamOptional.get().setName(source.getName());
                 teamOptional.get().setBalanceOfMatches(source.getBalanceOfMatches());
-                teamOptional.get().setLeague(source.getLeague());
+                teamOptional.get().setLeague(league);
                 teamOptional.get().setPlayers(source.getPlayers());
                 teamOptional.get().setPoints(source.getPoints());
                 teamOptional.get().setNationality(nationalityRepository.findOne(source.getNationality().getId()));
 
+                return teamOptional.get();
+
             } else {
 
-                Team team = new Team();
-                team.setLeague(league);
-                league.getTeams().add(team);
+                source.setLeague(league);
+//                teamOptional.get().setBalanceOfMatches(new BalanceOfMatches());
+                teamRepository.save(source);
+
+                return source;
             }
-
-            League savedLeague = leagueRepository.save(league);
-
-            Optional<Team> saveTeamOptional = savedLeague.getTeams().stream()
-                    .filter(leagueTeam -> leagueTeam.getId().equals(source.getId()))
-                    .findFirst();
-
-
-            if (!saveTeamOptional.isPresent()){
-                saveTeamOptional = savedLeague.getTeams().stream()
-                        .filter(team -> team.getLeague().equals(source.getLeague()))
-                        .filter(team -> team.getPlayers().equals(source))
-                        .filter(team -> team.getBalanceOfMatches().equals(source.getBalanceOfMatches()))
-                        .findFirst();
-            }
-
-            return saveTeamOptional.get();
         }
     }
 
-
-    @Override
-    public Team addTeamToLeague(Long leagueId, Long teamId) {
-        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(leagueId));
-
-        if (leagueOptional.isPresent()) {
-            Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(teamId));
-            Team team = teamOptional.get();
-            team.setLeague(leagueOptional.get());
-
-            leagueRepository.save(leagueOptional.get());
-            teamRepository.save(team);
-            return team;
-        } else {
-            throw new RuntimeException("League id doesn't exist");
-        }
-    }
 
     @Override
     @Transactional

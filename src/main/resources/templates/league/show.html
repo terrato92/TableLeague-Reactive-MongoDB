@@ -45,6 +45,11 @@
                         <div class="col-md-11 ">
                             <h1 class="panel-title">Teams</h1>
                         </div>
+                        <div class="col-md-1">
+                                <a class="btn btn-default" href="#"
+                                   th:href="@{'/league/' + ${league.getId()} + '/team/new'}"
+                                   role="button">New</a>
+                        </div>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -65,13 +70,13 @@
                                     <td th:text="${team.id}">334</td>
                                     <td th:text="${team.getName() }">Manchester</td>
                                     <td><a href="#"
-                                           th:href="@{'/league/' + ${leagueId} + '/team/' + ${team.id} + '/show'}">View</a>
+                                           th:href="@{'/team/' + ${team.id} + '/show'}">View</a>
                                     </td>
                                     <td><a href="#"
-                                           th:href="@{'/league/' + ${leagueId} + '/team/' + ${team.id} + '/update'}">Update</a>
+                                           th:href="@{'/team/' + ${team.id} + '/update'}">Update</a>
                                     </td>
                                     <td><a href="#"
-                                           th:href="@{'/league/' + ${leagueId} + '/team/' + ${team.id} + '/delete'}">Delete</a>
+                                           th:href="@{'/team/' + ${team.id} + '/delete'}">Delete</a>
                                     </td>
                                 </tr>
 

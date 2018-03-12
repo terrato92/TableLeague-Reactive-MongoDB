@@ -31,7 +31,7 @@ public class Team implements Comparable<Team>{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "balance_id")
-    private BalanceOfMatches balanceOfMatches;
+    private BalanceOfMatches balanceOfMatches = new BalanceOfMatches();
 
 
     @Transient

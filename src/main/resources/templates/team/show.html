@@ -62,13 +62,13 @@
                             <!--/*@thymesVar id="league" type="terrato.springframework.domain.League"*/-->
                             <td th:text="${team.id} + ' ' + ${team.id}">334</td>
                             <td><a href="#"
-                                   th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/show'}">View</a>
+                                   th:href="@{'/team/' + ${team.id} + '/show'}">View</a>
                             </td>
                             <td><a href="#"
-                                   th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/update'}">Update</a>
+                                   th:href="@{'/team/' + ${team.id} + '/update'}">Update</a>
                             </td>
                             <td><a href="#"
-                                   th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/delete'}">Delete</a>
+                                   th:href="@{'/team/' + ${team.id} + '/delete'}">Delete</a>
                             </td>
                         </li>
                     </tr>
