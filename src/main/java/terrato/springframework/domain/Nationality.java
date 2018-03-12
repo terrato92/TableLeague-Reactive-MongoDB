@@ -8,7 +8,6 @@ import javax.persistence.*;
  * Created by onenight on 2018-03-05.
  */
 @Data
-@Table
 @Entity
 public class Nationality {
 

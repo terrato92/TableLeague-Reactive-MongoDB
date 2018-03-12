@@ -31,5 +31,5 @@ public class Player {
     private Position position;
 
     @OneToOne
-    private Nationality state;
+    private Nationality nationality;
 }

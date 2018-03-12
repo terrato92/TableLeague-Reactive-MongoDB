@@ -49,7 +49,7 @@ public class LeagueController {
     public String newLeague(Model model) {
         model.addAttribute("league", new League());
 
-        model.addAttribute("stateList", nationalityService.listAllNationalities());
+        model.addAttribute("nationalities", nationalityService.listAllNationalities());
         return "league/leagueform";
     }
 

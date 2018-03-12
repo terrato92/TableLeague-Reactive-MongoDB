@@ -10,5 +10,5 @@ import java.util.Optional;
  */
 public interface NationalityRepository extends CrudRepository<Nationality, Long> {
 
-    Optional<Nationality> findByState(String state);
+    Optional<Nationality> findByNationality(String nationality);
 }

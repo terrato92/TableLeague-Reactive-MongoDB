@@ -69,7 +69,7 @@ public class PlayerController {
         player.setTeam(team);
         model.addAttribute("player", player);
 
-        player.setState(new Nationality());
+        player.setNationality(new Nationality());
         model.addAttribute("nationalList", nationalityService.listAllNationalities());
 
         return "team/player/playerform";
