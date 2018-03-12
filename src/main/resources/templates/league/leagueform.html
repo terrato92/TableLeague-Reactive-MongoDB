@@ -67,7 +67,7 @@
                                 <div class="col-md-3 form-group">
                                     <label>Difficulty:</label>
                                     <select class="form-control" th:field="*{difficulty}">
-                                        <option th:each="difficulty : ${T(terrato.springframwork.domain.Difficulty).values()}"
+                                        <option th:each="difficulty : ${T(terrato.springframework.domain.Difficulty).values()}"
                                                 th:value="${difficulty.name()}"
                                                 th:text="${difficulty.name()}"
                                         >val
@@ -81,11 +81,11 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <label>Nationality:</label>
-                                    <select class="form-control" name="nationality.id">
-                                        <option th:each="stateEach : ${stateList}"
-                                                th:value="${stateEach.id}"
-                                                th:selected="${stateEach.id.equals(player.state.id)}"
-                                                th:text="${stateEach.state}">Each
+                                    <select class="form-control" th:field="*{nationality}">
+                                        <option th:each="nationality : ${nationalities}"
+                                                th:value="${nationality.id}"
+                                                th:selected="${nationality.id.equals(player.nationality.id)}"
+                                                th:text="${nationality.getState()}">Each
                                         </option>
                                     </select>
                                 </div>
