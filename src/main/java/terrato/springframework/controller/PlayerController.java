@@ -3,9 +3,7 @@ package terrato.springframework.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import terrato.springframework.domain.Nationality;
 import terrato.springframework.domain.Player;
-import terrato.springframework.domain.Team;
 import terrato.springframework.service.NationalityService;
 import terrato.springframework.service.PlayerService;
 import terrato.springframework.service.TeamService;
@@ -60,20 +58,20 @@ public class PlayerController {
         return "redirect:/team/" + teamId + "/players";
     }
 
-    @PostMapping
-    @RequestMapping("league/{leagueId}/team/{teamId}/player/new")
-    public String addPlayer(@PathVariable String leagueId, @PathVariable String teamId, Model model) {
-        Team team = teamService.findTeamById(Long.valueOf(leagueId), Long.valueOf(teamId));
-
-        Player player = new Player();
-        player.setTeam(team);
-        model.addAttribute("player", player);
-
-        player.setNationality(new Nationality());
-        model.addAttribute("nationalList", nationalityService.listAllNationalities());
-
-        return "team/player/playerform";
-    }
+//    @PostMapping
+//    @RequestMapping("league/{leagueId}/team/{teamId}/player/new")
+//    public String addPlayer(@PathVariable String leagueId, @PathVariable String teamId, Model model) {
+////        Team team = teamService.findTeamByLeagueId(Long.valueOf(leagueId));
+////
+////        Player player = new Player();
+////        player.setTeam(team);
+////        model.addAttribute("player", player);
+////
+////        player.setNationality(new Nationality());
+////        model.addAttribute("nationalList", nationalityService.listAllNationalities());
+////
+////        return "team/player/playerform";
+//    }
 
 
 }

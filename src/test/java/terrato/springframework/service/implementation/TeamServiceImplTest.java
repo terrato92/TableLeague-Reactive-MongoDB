@@ -66,10 +66,10 @@ public class TeamServiceImplTest {
 
         when(leagueRepository.findOne(anyLong())).thenReturn(leagueOptional.get());
 
-        Team team1 = teamService.findTeamById(1L, 2L);
+        Team team1 = teamService.findTeamByLeagueId(1L, 2L);
 
         assertEquals(Long.valueOf(2L), team1.getId());
-        assertNotNull(teamService.findTeamById(1L, 2L));
+        assertNotNull(teamService.findTeamByLeagueId(1L, 2L));
     }
 
 

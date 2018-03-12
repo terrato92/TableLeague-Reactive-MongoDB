@@ -27,11 +27,6 @@
                             <div class="col-md-3">
                                 <h1 class="panel-title" th:text="${league.name}"></h1>
                             </div>
-
-                            <!--<div class="col-md-1">-->
-                            <!--<a class="btn btn-default" href="#"-->
-                            <!--th:href="@{'/league/' + ${league.id} + '/image'}" role="button">Change Image</a>-->
-                            <!--</div>-->
                         </div>
                     </div>
                     <div class="panel-body">
@@ -50,11 +45,6 @@
                         <div class="col-md-11 ">
                             <h1 class="panel-title">Teams</h1>
                         </div>
-                        <div class="col-md-1">
-                            <a class="btn btn-default" href="#"
-                               th:href="@{'/league/' + ${league.id} + '/teams'}"
-                                role="button">View</a>
-                        </div>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -70,7 +60,7 @@
                                     <th>Delete</th>
                                 </tr>
                                 </thead>
-                                <tr  th:each="team : ${teams}">
+                                <tr th:each="team : ${teams}">
 
                                     <td th:text="${team.id}">334</td>
                                     <td th:text="${team.getName() }">Manchester</td>

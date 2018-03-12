@@ -32,8 +32,8 @@ public class TeamServiceImpl implements TeamService {
 
 
     @Override
-    public Team findTeamById(Long idLeague, Long idTeam) {
-        Optional<League> leagueOptional = Optional.of(leagueRepository.findOne(idLeague));
+    public Set<Team> findTeamByLeagueId(Long idLeague) {
+        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
         if (!leagueOptional.isPresent()) {
             log.error("League is not found!");
@@ -41,12 +41,7 @@ public class TeamServiceImpl implements TeamService {
 
         League league = leagueOptional.get();
 
-        Optional<Team> teamOptional = league.getTeams()
-                .stream()
-                .filter(team -> team.getId().equals(idTeam))
-                .findFirst();
-
-        return teamOptional.get();
+        return  league.getTeams();
     }
 
     @Override
@@ -171,4 +166,6 @@ public class TeamServiceImpl implements TeamService {
             throw new RuntimeException("League doesn't exist");
         }
     }
+
+
 }

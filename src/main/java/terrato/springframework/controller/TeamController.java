@@ -58,7 +58,7 @@ public class TeamController {
     @RequestMapping("league/{leagueId}/team/{teamId}/show")
     public String showLeagueTeamById(@PathVariable String leagueId,
                                      @PathVariable String teamId, Model model) {
-        model.addAttribute("team", teamService.findTeamById(Long.valueOf(leagueId), Long.valueOf(teamId)));
+        model.addAttribute("team", teamService.findTeamByLeagueId(Long.valueOf(leagueId)));
 
         return "league/team/list";
     }
@@ -68,7 +68,7 @@ public class TeamController {
     @RequestMapping("league/{leagueId}/team/{teamId}/update")
     public String updateLeagueTeam(@PathVariable String leagueId,
                                    @PathVariable String teamId, Model model) {
-        model.addAttribute("team", teamService.findTeamById(Long.valueOf(leagueId), Long.valueOf(teamId)));
+        model.addAttribute("team", teamService.findTeamByLeagueId(Long.valueOf(leagueId)));
 
         model.addAttribute("nationalities", nationalityService.listAllNationalities());
 

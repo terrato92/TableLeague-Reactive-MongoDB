@@ -3,6 +3,7 @@ package terrato.springframework.service;
 import terrato.springframework.domain.Team;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Created by onenight on 2018-03-03.
@@ -10,7 +11,8 @@ import java.util.Collection;
 public interface TeamService {
 
 
-    Team findTeamById(Long idLeague, Long idTeam);
+
+    Set<Team> findTeamByLeagueId(Long idLeague);
 
     Team saveTeam(Team teamSource);
 

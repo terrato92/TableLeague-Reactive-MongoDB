@@ -66,7 +66,7 @@ public class TeamControllerTest {
     public void showTeamTest() throws Exception {
         Team team = new Team();
 
-        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
+        when(teamService.findTeamByLeagueId(anyLong(), anyLong())).thenReturn(team);
 
         mockMvc.perform(get("/league/1/team/2/show"))
                 .andExpect(status().isOk())
@@ -90,7 +90,7 @@ public class TeamControllerTest {
 
         Team team = new Team();
 
-        when(teamService.findTeamById(anyLong(), anyLong())).thenReturn(team);
+        when(teamService.findTeamByLeagueId(anyLong(), anyLong())).thenReturn(team);
         when(nationalityService.listAllNationalities()).thenReturn(new HashSet<>());
 
         mockMvc.perform(get("/league/1/team/2/update"))

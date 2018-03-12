@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import terrato.springframework.domain.League;
 import terrato.springframework.service.LeagueService;
+import terrato.springframework.service.TeamService;
 import terrato.springframework.service.implementation.NationalityServiceImpl;
 
 import javax.validation.Valid;
@@ -20,6 +21,9 @@ import javax.validation.Valid;
 public class LeagueController {
 
     private final LeagueService leagueService;
+
+    @Autowired
+    private TeamService teamService;
 
     @Autowired
     private NationalityServiceImpl nationalityService;
@@ -40,6 +44,7 @@ public class LeagueController {
     @RequestMapping("league/{id}/show")
     public String showLeagueById(@PathVariable String id, Model model) {
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(id)));
+        model.addAttribute("teams", teamService.findTeamByLeagueId(Long.valueOf(id)));
 
         return "league/show";
     }
