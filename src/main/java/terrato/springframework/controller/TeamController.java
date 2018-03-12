@@ -39,7 +39,7 @@ public class TeamController {
         model.addAttribute("team", team);
 
         team.setNationality(new Nationality());
-        model.addAttribute("nationalList", nationalityService.listAllNationalities());
+        model.addAttribute("nationalities", nationalityService.listAllNationalities());
 
         return "league/team/teamform";
     }
@@ -48,7 +48,6 @@ public class TeamController {
     @RequestMapping("league/{leagueId}/teams")
     public String getTeams(@PathVariable String leagueId, Model model) {
 
-        model.addAttribute("leagues", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
 
         model.addAttribute("teams", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
 

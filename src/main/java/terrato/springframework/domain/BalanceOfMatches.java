@@ -15,7 +15,7 @@ public class BalanceOfMatches {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long balance_id;
+    private Long id;
 
     private int wins = 0;
 

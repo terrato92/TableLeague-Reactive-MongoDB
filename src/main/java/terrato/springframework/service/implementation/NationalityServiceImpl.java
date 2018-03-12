@@ -22,9 +22,9 @@ public class NationalityServiceImpl implements NationalityService {
 
     @Override
     public Set<Nationality> listAllNationalities() {
-        Set<Nationality> states = new HashSet<>();
-        nationalityRepository.findAll().forEach(states::add);
-        return states;
+        Set<Nationality> nationalities = new HashSet<>();
+        nationalityRepository.findAll().forEach(nationalities::add);
+        return nationalities;
 
     }
 }

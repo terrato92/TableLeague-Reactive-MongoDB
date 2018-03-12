@@ -83,12 +83,11 @@
 
 
                                 <div class="col-md-3 form-group">
-                                    <label>Nationality:</label>
-                                    <select class="form-control" name="nationality.id">
-                                        <option th:each="stateEach : ${stateList}"
-                                                th:value="${stateEach.id}"
-                                                th:selected="${stateEach.id.equals(player.nationality.id)}"
-                                                th:text="${stateEach.nationality}">nationality
+                                    <label>Nationalit:</label>
+                                    <select class="form-control" th:field="*{nationality}">
+                                        <option th:each="nationality : ${nationalities}"
+                                                th:value="${nationality.getId()}"
+                                                th:text="${nationality.getNationality()}">
                                         </option>
                                     </select>
                                 </div>

@@ -80,12 +80,11 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3 form-group">
-                                    <!--/*@thymesVar id="league" type="terrato.springframework.domain.Nationality"*/-->
                                     <label>Nationality:</label>
                                     <select class="form-control" th:field="*{nationality}">
                                         <option th:each="nationality : ${nationalities}"
                                                 th:value="${nationality.getId()}"
-                                                th:text="${nationality.getNationality()}">Each
+                                                th:text="${nationality.getNationality()}">
                                         </option>
                                     </select>
                                 </div>

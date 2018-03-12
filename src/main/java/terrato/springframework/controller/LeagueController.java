@@ -65,6 +65,7 @@ public class LeagueController {
     public String updateLeague(@PathVariable String leagueId, Model model){
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(leagueId)));
 
+        model.addAttribute("nationalities", nationalityService.listAllNationalities());
         return "league/leagueform";
     }
 

@@ -30,17 +30,16 @@
                             <h1 class="panel-title">Teams</h1>
                         </div>
                         <div class="col-md-1">
-                            <tr th:each="league : ${leagues}">
+                            <tr>
                                 <a class="btn btn-default" href="#"
-                                   th:href="@{'/league/' + ${league.id} + '/team/new'}"
+                                   th:href="@{'/league/' + ${leagueId} + '/team/new'}"
                                    role="button">New</a>
                             </tr>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive" th:each="league : ${leagues}"
-                         th:if="${not #lists.isEmpty(league.getName())}">
+                    <div class="table-responsive">
                         <table class="table table-hover ">
                             <thead class="thead-inverse">
                             <tr>
@@ -51,33 +50,18 @@
                                 <th>Delete</th>
                             </tr>
                             </thead>
-                            <tr th:remove="all">
-                                <td>123</td>
-                                <td>Tasty Goodnees 1</td>
-                                <td><a href="#">View</a></td>
-                                <td><a href="#">Update</a></td>
-                                <td><a href="#">Delete</a></td>
-                            </tr>
-                            <tr th:remove="all">
-                                <td>12333</td>
-                                <td>Tasty Goodnees 2</td>
-                                <td><a href="#">View</a></td>
-                                <td><a href="#">Update</a></td>
-                                <td><a href="#">Delete</a></td>
-                            </tr>
-
                             <tr  th:each="team : ${teams}">
 
                                 <td th:text="${team.id}">334</td>
                                 <td th:text="${team.getName() }">Manchester</td>
                                 <td><a href="#"
-                                       th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/show'}">View</a>
+                                       th:href="@{'/league/' + ${leagueId} + '/team/' + ${team.id} + '/show'}">View</a>
                                 </td>
                                 <td><a href="#"
-                                       th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/update'}">Update</a>
+                                       th:href="@{'/league/' + ${leagueId} + '/team/' + ${team.id} + '/update'}">Update</a>
                                 </td>
                                 <td><a href="#"
-                                       th:href="@{'/league/' + ${league.id} + '/team/' + ${team.id} + '/delete'}">Delete</a>
+                                       th:href="@{'/league/' + ${leagueId} + '/team/' + ${team.id} + '/delete'}">Delete</a>
                                 </td>
                             </tr>
 
