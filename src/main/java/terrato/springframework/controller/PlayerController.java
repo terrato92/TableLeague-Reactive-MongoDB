@@ -42,12 +42,11 @@ public class PlayerController {
     }
 
     @GetMapping
-    @RequestMapping("team/{teamId}/player/{playerId}/show")
-    public String showPlayerById(@PathVariable Long teamId,
-                                 @PathVariable String playerId, Model model) {
+    @RequestMapping("player/{playerId}/show")
+    public String showPlayerById(@PathVariable String playerId, Model model) {
         model.addAttribute("player", playerService.getTeamPlayerById(Long.valueOf(playerId)));
 
-        return "redirect:/team/" + teamId + "/show";
+        return "player/show";
     }
 
     @GetMapping
