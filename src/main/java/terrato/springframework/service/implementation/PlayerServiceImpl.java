@@ -46,21 +46,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player getTeamPlayerById(Long idTeam, Long idPlayer) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
+    public Player getTeamPlayerById(Long idPlayer) {
+        Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(idPlayer));
 
-        if (!teamOptional.isPresent()) {
+        if (!playerOptional.isPresent()) {
             throw new RuntimeException("Team doesn't exist");
         } else {
-            Team team = teamOptional.get();
-
-            Optional<Player> playerOptional = team.getPlayers().stream().filter(player -> player.getId().equals(idPlayer)).findFirst();
-
-            if (!playerOptional.isPresent()) {
-                throw new RuntimeException("Player doesn't exist");
-            } else {
-                return playerOptional.get();
-            }
+            return playerOptional.get();
         }
     }
 
@@ -99,7 +91,6 @@ public class PlayerServiceImpl implements PlayerService {
             }
         }
     }
-
 
 
     @Override

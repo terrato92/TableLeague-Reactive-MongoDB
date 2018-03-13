@@ -24,38 +24,52 @@ public class PlayerController {
         this.nationalityService = nationalityService;
     }
 
-//    @GetMapping
-//    @RequestMapping("team/{teamId}/show")
-//    public String showTeamPlayersById(@PathVariable String teamId, Model model) {
-//        model.addAttribute("teams", playerService.getPlayersFromTeam(Long.valueOf(teamId)));
-//
-//        return "team/players/show";
-//    }
+
+    @PostMapping
+    @RequestMapping("team/{teamId}/player/new")
+    public String newPlayer(@PathVariable Long teamId, Model model){
+        model.addAttribute("player", new Player());
+
+        return "player/playerform";
+    }
 
     @GetMapping
     @RequestMapping("team/{teamId}/player/{playerId}/show")
     public String showPlayerById(@PathVariable String teamID,
                                  @PathVariable String playerId, Model model) {
-        model.addAttribute("player", playerService.getTeamPlayerById(Long.valueOf(teamID), Long.valueOf(playerId)));
+        model.addAttribute("player", playerService.getTeamPlayerById(Long.valueOf(playerId)));
 
         return "team/player/show";
     }
 
-    @PostMapping
-    @RequestMapping("team/{teamId}/player")
-    public String updatePlayer(@ModelAttribute("palyer") Player player) {
+    @GetMapping
+    @RequestMapping("player{playerId}/update")
+    public String updateTeamPlayerById(@PathVariable Long teamId,
+                                       @PathVariable Long playerId, Model model){
+        model.addAttribute("player", playerService.getTeamPlayerById(playerId));
 
-        Player playerUpdate = playerService.getTeamPlayerById(player.getTeam().getId(), player.getId());
+        model.addAttribute("nationalities", nationalityService.listAllNationalities());
+
+        return "player/playerform";
+    }
+
+    @PostMapping
+    @RequestMapping("player/{playerId}/player")
+    public String saveOrUpdatePlayer(@ModelAttribute Player player, @PathVariable Long playerId) {
+
+        Player playerUpdate = playerService.getTeamPlayerById(playerId);
 
         return "redirect:/team/" + playerUpdate.getTeam().getId() + "/player/" + playerUpdate.getId() + "/show";
     }
 
+
+
     @GetMapping
-    @RequestMapping("team/{teamId}/player/{playerId}")
+    @RequestMapping("team/{teamId}/player/{playerId}/delete")
     public String deletePlayer(@PathVariable String teamId, @PathVariable String playerId) {
         playerService.deletePlayerFromTeam(Long.valueOf(playerId), Long.valueOf(teamId));
 
-        return "redirect:/team/" + teamId + "/players";
+        return "redirect:/team/" + teamId + "/player/show";
     }
 
 //    @PostMapping

@@ -60,7 +60,6 @@ public class TeamServiceImpl implements TeamService {
     @Override
     @Transactional
     public Team saveTeam(Team source, Long idLeague) {
-//        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(source.getId()));
 
         Optional<League> leagueOptional = Optional.ofNullable((leagueRepository.findOne(idLeague)));
 
@@ -82,13 +81,15 @@ public class TeamServiceImpl implements TeamService {
                 teamOptional.get().setLeague(league);
                 teamOptional.get().setPlayers(source.getPlayers());
                 teamOptional.get().setPoints(source.getPoints());
-                teamOptional.get().setNationality(nationalityRepository.findOne(source.getNationality().getId()));
+                teamOptional.get().setPower(source.getPower());
+                teamOptional.get().setNationality(league.getNationality());
 
                 return teamOptional.get();
 
             } else {
 
                 source.setLeague(league);
+                source.setNationality(league.getNationality());
 //                teamOptional.get().setBalanceOfMatches(new BalanceOfMatches());
                 teamRepository.save(source);
 

@@ -33,6 +33,8 @@ public class Team implements Comparable<Team>{
     @JoinColumn(name = "balance_id")
     private BalanceOfMatches balanceOfMatches = new BalanceOfMatches();
 
+    @Enumerated(value = EnumType.STRING)
+    private Power power;
 
     @Transient
     private int points;

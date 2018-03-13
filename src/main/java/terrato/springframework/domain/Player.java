@@ -25,9 +25,9 @@ public class Player {
     private int age;
 
     @ManyToOne
-    @JoinColumn(name = "team_id")
     private Team team;
 
+    @Enumerated(value = EnumType.STRING)
     private Position position;
 
     @OneToOne
