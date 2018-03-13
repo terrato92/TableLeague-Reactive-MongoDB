@@ -74,7 +74,7 @@ public class PlayerServiceImpl implements PlayerService {
 
             if (playerOptional.isPresent()) {
                 Player player1 = playerOptional.get();
-                player1.setTeam(player.getTeam());
+                player1.setTeam(team);
                 player1.setName(player.getName());
 
                 player1.setNationality(nationalityRepository.findOne(player.getNationality().getId()));
@@ -94,26 +94,14 @@ public class PlayerServiceImpl implements PlayerService {
 
 
     @Override
-    public Collection<Player> deletePlayerFromTeam(Long idPlayer, Long idTeam) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idPlayer));
+    public void deletePlayerFromTeam(Long idPlayer) {
 
-        if (teamOptional.isPresent()) {
-            Team team = teamOptional.get();
+        Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(idPlayer));
 
-            Optional<Player> playerOptional = team.getPlayers().stream()
-                    .filter(player -> player.getId().equals(idPlayer))
-                    .findFirst();
-
-            Player playerToDelete = playerOptional.get();
-            playerToDelete.setTeam(null);
-            team.getPlayers().remove(playerToDelete);
-
-            teamRepository.save(team);
-
-            return team.getPlayers();
+        if (!playerOptional.isPresent()) {
+            throw new RuntimeException("I can't find player");
         } else {
-            log.error("Team with id: " + idTeam + " doesn't exist");
-            throw new RuntimeException("I can't find team with id: " + idTeam);
+            playerRepository.delete(idPlayer);
         }
     }
 }

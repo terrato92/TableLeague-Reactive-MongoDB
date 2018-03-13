@@ -33,18 +33,29 @@
                 <div class="pannel-group">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h1 class="panel-title">Edit Team Information</h1>
+                            <h1 class="panel-title">Edit Player Information</h1>
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-md-3 form-group" th:class="${#fields.hasErrors('name')}
                                 ? 'col-md-3 form-group has-error' : 'col-md-3 form-group'">
-                                    <label>Team Name:</label>
+                                    <label>Player Name:</label>
                                     <input type="text" class="form-control" th:field="*{name}"
                                            th:errorclass="has-error"/>
                                     <span class="help-block" th:if="${#fields.hasErrors('name')}">
                                         <ul>
                                             <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+                                        </ul>
+                                    </span>
+                                </div>
+                                <div class="col-md-3 form-group" th:class="${#fields.hasErrors('age')}
+                                ? 'col-md-3 form-group has-error' : 'col-md-3 form-group'">
+                                    <label>Age:</label>
+                                    <input type="text" class="form-control" th:field="*{age}"
+                                           th:errorclass="has-error"/>
+                                    <span class="help-block" th:if="${#fields.hasErrors('age')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('age')}" th:text="${err}"></li>
                                         </ul>
                                     </span>
                                 </div>

@@ -43,17 +43,16 @@ public class PlayerController {
 
     @GetMapping
     @RequestMapping("team/{teamId}/player/{playerId}/show")
-    public String showPlayerById(@PathVariable String teamID,
+    public String showPlayerById(@PathVariable Long teamId,
                                  @PathVariable String playerId, Model model) {
         model.addAttribute("player", playerService.getTeamPlayerById(Long.valueOf(playerId)));
 
-        return "team/player/show";
+        return "redirect:/team/" + teamId + "/show";
     }
 
     @GetMapping
-    @RequestMapping("player{playerId}/update")
-    public String updateTeamPlayerById(
-                                       @PathVariable Long playerId, Model model){
+    @RequestMapping("player/{playerId}/update")
+    public String updateTeamPlayerById(@PathVariable Long playerId, Model model){
         model.addAttribute("player", playerService.getTeamPlayerById(playerId));
 
         model.addAttribute("nationalities", nationalityService.listAllNationalities());
@@ -72,28 +71,17 @@ public class PlayerController {
 
 
 
-    @GetMapping
-    @RequestMapping("team/{teamId}/player/{playerId}/delete")
-    public String deletePlayer(@PathVariable String teamId, @PathVariable String playerId) {
-        playerService.deletePlayerFromTeam(Long.valueOf(playerId), Long.valueOf(teamId));
+    @PostMapping
+    @RequestMapping("player/{playerId}/delete")
+    public String deletePlayer(@PathVariable Long playerId) {
 
-        return "redirect:/team/" + teamId + "/player/show";
+        Player player = playerService.getTeamPlayerById(playerId);
+        Long teamId = player.getTeam().getId();
+
+        playerService.deletePlayerFromTeam(playerId);
+
+        return "redirect:/team/" + teamId + "/show";
     }
-
-//    @PostMapping
-//    @RequestMapping("league/{leagueId}/team/{teamId}/player/new")
-//    public String addPlayer(@PathVariable String leagueId, @PathVariable String teamId, Model model) {
-////        Team team = teamService.findTeamByLeagueId(Long.valueOf(leagueId));
-////
-////        Player player = new Player();
-////        player.setTeam(team);
-////        model.addAttribute("player", player);
-////
-////        player.setNationality(new Nationality());
-////        model.addAttribute("nationalList", nationalityService.listAllNationalities());
-////
-////        return "team/player/playerform";
-//    }
 
 
 }
