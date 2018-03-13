@@ -58,8 +58,8 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional
-    public Player savePlayer(Player player) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(player.getTeam().getId()));
+    public Player savePlayer(Player player, Long teamId) {
+        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(teamId));
 
         if (!teamOptional.isPresent()) {
             throw new RuntimeException("Team doesn't exist");

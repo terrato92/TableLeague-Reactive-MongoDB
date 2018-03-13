@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import terrato.springframework.domain.Player;
+import terrato.springframework.domain.Team;
 import terrato.springframework.service.NationalityService;
 import terrato.springframework.service.PlayerService;
 import terrato.springframework.service.TeamService;
@@ -28,7 +29,14 @@ public class PlayerController {
     @PostMapping
     @RequestMapping("team/{teamId}/player/new")
     public String newPlayer(@PathVariable Long teamId, Model model){
-        model.addAttribute("player", new Player());
+        Team team = new Team();
+        team.setId(teamId);
+        Player player = new Player();
+        player.setTeam(team);
+
+        model.addAttribute("player", player);
+        model.addAttribute("nationalities", nationalityService.listAllNationalities());
+
 
         return "player/playerform";
     }
@@ -44,7 +52,7 @@ public class PlayerController {
 
     @GetMapping
     @RequestMapping("player{playerId}/update")
-    public String updateTeamPlayerById(@PathVariable Long teamId,
+    public String updateTeamPlayerById(
                                        @PathVariable Long playerId, Model model){
         model.addAttribute("player", playerService.getTeamPlayerById(playerId));
 
@@ -54,12 +62,12 @@ public class PlayerController {
     }
 
     @PostMapping
-    @RequestMapping("player/{playerId}/player")
-    public String saveOrUpdatePlayer(@ModelAttribute Player player, @PathVariable Long playerId) {
+    @RequestMapping("team/{teamId}/player")
+    public String saveOrUpdatePlayer(@ModelAttribute Player player, @PathVariable Long teamId) {
 
-        Player playerUpdate = playerService.getTeamPlayerById(playerId);
+        Player playerUpdate = playerService.savePlayer(player, teamId);
 
-        return "redirect:/team/" + playerUpdate.getTeam().getId() + "/player/" + playerUpdate.getId() + "/show";
+        return "redirect:/team/" + teamId + "/player/" + playerUpdate.getId() + "/show";
     }
 
 

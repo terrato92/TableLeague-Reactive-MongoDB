@@ -18,11 +18,12 @@
 <body>
 <!--/*@thymesVar id="league" type="terrato.springframework.domain.League"*/-->
 <!--/*@thymesVar id="team" type="terrato.springframework.domain.Team"*/-->
+<!--/*@thymesVar id="player" type="terrato.springframework.domain.Player"*/-->
+
 <div class="container-fluid" style="margin-top: 20px">
-    <!--/*@thymesVar id="team" type="terrato.springframework.domain.Player"*/-->
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form th:object="${player}" th:action="@{'/team/' + ${team.getId()} + '/player'}" method="post">
+            <form th:object="${player}" th:action="@{'/team/' + ${player.getTeam().getId()} + '/player'}" method="post">
 
                 <!--<div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">-->
                 <!--<p>Please Correct Errors Below</p>-->
@@ -52,25 +53,20 @@
                                 <div class="col-md-3 form-group">
                                     <label>Nationality:</label>
                                     <select class="form-control" th:field="*{nationality}">
-                                        <option th:each="nationlityValue : ${T(terrato.springframowork.domain.Nationality).values()}"
-                                                th:value="${nationlityValue.name()}"
-                                                th:text="${nationlityValue.name()}">
+                                        <option th:each="nationality : ${nationalities}"
+                                                th:value="${nationality.getId()}"
+                                                th:text="${nationality.getNationality()}">
                                         </option>
-                                    </select>
-                                    <select class="form-control" th:field="*{po}">
-                                        <option>Easy</option>
-                                        <option>Medium</option>
-                                        <option>Hard</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group">
                                     <label>Team power:</label>
-                                    <select class="form-control" th:field="*{power}">
-                                        <option th:each="power : ${T(terrato.springframework.domain.Power).values()}"
-                                                th:value="${power.name()}"
-                                                th:text="${power.name()}">
+                                    <select class="form-control" th:field="*{position}">
+                                        <option th:each="position : ${T(terrato.springframework.domain.Position).values()}"
+                                                th:value="${position.name()}"
+                                                th:text="${position.name()}">
                                         </option>
                                     </select>
                                     <select class="form-control" th:remove="all">
