@@ -67,7 +67,7 @@ public class PlayerController {
 
     @PostMapping
     @RequestMapping("team/{teamId}/player")
-    public String saveOrUpdatePlayer(@Valid @ModelAttribute ("player") Player player, @PathVariable Long teamId,
+    public String saveOrUpdatePlayer(@PathVariable Long teamId, @Valid @ModelAttribute ("player") Player player,
                                      BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()){
