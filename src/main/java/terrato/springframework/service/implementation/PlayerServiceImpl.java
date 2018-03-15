@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import terrato.springframework.domain.Player;
 import terrato.springframework.domain.Team;
+import terrato.springframework.exception.NotFoundException;
 import terrato.springframework.repository.NationalityRepository;
 import terrato.springframework.repository.PlayerRepository;
 import terrato.springframework.repository.TeamRepository;
@@ -41,7 +42,7 @@ public class PlayerServiceImpl implements PlayerService {
             return playerOptional.get();
         } else {
             log.error("Team with id: " + idTeam + " doesn't exist");
-            throw new RuntimeException("I can't find team with id: " + idTeam);
+            throw new NotFoundException("I can't find team with id: " + idTeam);
         }
     }
 
@@ -50,7 +51,7 @@ public class PlayerServiceImpl implements PlayerService {
         Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(idPlayer));
 
         if (!playerOptional.isPresent()) {
-            throw new RuntimeException("Team doesn't exist");
+            throw new NotFoundException("Team doesn't exist");
         } else {
             return playerOptional.get();
         }
@@ -62,7 +63,7 @@ public class PlayerServiceImpl implements PlayerService {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(teamId));
 
         if (!teamOptional.isPresent()) {
-            throw new RuntimeException("Team doesn't exist");
+            throw new NotFoundException("Team doesn't exist");
         } else {
             Team team = teamOptional.get();
 
@@ -99,7 +100,7 @@ public class PlayerServiceImpl implements PlayerService {
         Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(idPlayer));
 
         if (!playerOptional.isPresent()) {
-            throw new RuntimeException("I can't find player");
+            throw new NotFoundException("I can't find player");
         } else {
             playerRepository.delete(idPlayer);
         }

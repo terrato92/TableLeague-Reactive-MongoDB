@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import terrato.springframework.domain.League;
 import terrato.springframework.domain.Team;
+import terrato.springframework.exception.NotFoundException;
 import terrato.springframework.repository.LeagueRepository;
 import terrato.springframework.repository.NationalityRepository;
 import terrato.springframework.repository.TeamRepository;
@@ -51,7 +52,7 @@ public class TeamServiceImpl implements TeamService {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
 
         if (!teamOptional.isPresent()){
-            throw new RuntimeException("No team");
+            throw new NotFoundException("No team");
         } else {
             return teamOptional.get();
         }
@@ -65,7 +66,7 @@ public class TeamServiceImpl implements TeamService {
 
         if (!leagueOptional.isPresent()) {
             log.error("League with id " + source.getId() + " doesn't exist");
-            throw new RuntimeException("brak ligi");
+            throw new NotFoundException("brak ligi");
         } else {
 
             League league = leagueOptional.get();
@@ -119,6 +120,8 @@ public class TeamServiceImpl implements TeamService {
                 teamRepository.delete(teamToDelete);
                 leagueRepository.save(league);
             }
+        } else {
+            log.error("AWWWWAAARIAA ERROR");
         }
 
     }
@@ -147,7 +150,7 @@ public class TeamServiceImpl implements TeamService {
             return listTeamSort;
         } else {
             log.error("I can't find league with id: " + idLeague);
-            throw new RuntimeException("League doesn't exist");
+            throw new NotFoundException("League doesn't exist");
         }
     }
 
