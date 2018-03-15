@@ -65,7 +65,7 @@ public class PlayerController {
 
         Player playerUpdate = playerService.savePlayer(player, teamId);
 
-        return "redirect:/team/" + teamId + "/player/" + playerUpdate.getId() + "/show";
+        return "redirect:/player/" + playerUpdate.getId() + "/show";
     }
 
 
