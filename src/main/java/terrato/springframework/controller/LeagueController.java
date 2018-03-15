@@ -1,15 +1,14 @@
 package terrato.springframework.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import terrato.springframework.domain.League;
 import terrato.springframework.service.LeagueService;
+import terrato.springframework.service.NationalityService;
 import terrato.springframework.service.TeamService;
-import terrato.springframework.service.implementation.NationalityServiceImpl;
 
 import javax.validation.Valid;
 
@@ -22,14 +21,16 @@ public class LeagueController {
 
     private final LeagueService leagueService;
 
-    @Autowired
-    private TeamService teamService;
 
-    @Autowired
-    private NationalityServiceImpl nationalityService;
+    private final TeamService teamService;
 
-    public LeagueController(LeagueService leagueService) {
+    private final NationalityService nationalityService;
+
+    public LeagueController(LeagueService leagueService, TeamService teamService, NationalityService nationalityService) {
         this.leagueService = leagueService;
+        this.teamService = teamService;
+        this.nationalityService = nationalityService;
+
     }
 
     @GetMapping
