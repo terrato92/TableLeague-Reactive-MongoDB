@@ -5,10 +5,13 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import terrato.springframework.domain.League;
+import terrato.springframework.exception.NotFoundException;
+import terrato.springframework.repository.LeagueRepository;
 import terrato.springframework.service.LeagueService;
 
 import java.util.HashSet;
@@ -32,6 +35,9 @@ public class LeagueControllerTest {
 
     @Mock
     LeagueService leagueService;
+
+    @Autowired
+    LeagueRepository leagueRepository;
 
     LeagueController leagueController;
 
@@ -110,6 +116,27 @@ public class LeagueControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("league/leagueform"));
 
+    }
+
+
+    @Test()
+    public void testGetLeagueByIdNotFound() throws Exception {
+
+        when(leagueService.getLeagueById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/league/8/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404error"));
+    }
+
+    @Test()
+    public void testGetLeagueByIdNumberFormatException() throws Exception {
+
+//        when(leagueService.getLeagueById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/league/asd/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
     }
 
 }
