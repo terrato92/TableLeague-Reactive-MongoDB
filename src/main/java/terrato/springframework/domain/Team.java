@@ -1,6 +1,9 @@
 package terrato.springframework.domain;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -22,7 +25,7 @@ public class Team implements Comparable<Team>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @NotBlank
     private String name;
 
 

@@ -1,7 +1,9 @@
 package terrato.springframework.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import terrato.springframework.domain.Player;
 import terrato.springframework.domain.Team;
@@ -9,9 +11,13 @@ import terrato.springframework.service.NationalityService;
 import terrato.springframework.service.PlayerService;
 import terrato.springframework.service.TeamService;
 
+import javax.validation.Valid;
+
 /**
  * Created by onenight on 2018-03-05.
  */
+
+@Slf4j
 @Controller
 public class PlayerController {
 
@@ -61,7 +67,18 @@ public class PlayerController {
 
     @PostMapping
     @RequestMapping("team/{teamId}/player")
-    public String saveOrUpdatePlayer(@ModelAttribute Player player, @PathVariable Long teamId) {
+    public String saveOrUpdatePlayer(@Valid @ModelAttribute ("player") Player player, @PathVariable Long teamId,
+                                     BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()){
+            Team team = new Team();
+            team.setId(teamId);
+
+            player.setTeam(team);
+
+            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+            return "player/playerform";
+        }
 
         Player playerUpdate = playerService.savePlayer(player, teamId);
 

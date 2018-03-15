@@ -5,14 +5,14 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import terrato.springframework.domain.League;
+import terrato.springframework.domain.Team;
 import terrato.springframework.exception.NotFoundException;
-import terrato.springframework.repository.LeagueRepository;
 import terrato.springframework.service.LeagueService;
+import terrato.springframework.service.TeamService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,8 +36,8 @@ public class LeagueControllerTest {
     @Mock
     LeagueService leagueService;
 
-    @Autowired
-    LeagueRepository leagueRepository;
+    @Mock
+    TeamService teamService;
 
     LeagueController leagueController;
 
@@ -48,7 +48,7 @@ public class LeagueControllerTest {
         MockitoAnnotations.initMocks(this);
 
         leagueController = new LeagueController(leagueService);
-        mockMvc = MockMvcBuilders.standaloneSetup(leagueController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(leagueController).setControllerAdvice(new ControllerExceptionController()).build();
     }
 
     @Test
@@ -77,10 +77,15 @@ public class LeagueControllerTest {
 
     @Test
     public void showLeagueById() throws Exception {
+        Team team = new Team();
+        team.setId(2L);
+
         League league = new League();
         league.setId(1L);
+        league.addTeam(team);
 
         when(leagueService.getLeagueById(anyLong())).thenReturn(league);
+        when(teamService.findTeamByLeagueId(anyLong())).thenReturn(league.getTeams());
 
         mockMvc.perform(get("/league/1/show"))
                 .andExpect(status().isOk())
@@ -112,14 +117,27 @@ public class LeagueControllerTest {
 
         when(leagueService.getLeagueById(anyLong())).thenReturn(league);
 
-        mockMvc.perform(get("/league/1/update"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("league/leagueform"));
+        mockMvc.perform(get("/league"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
 
     }
 
 
-    @Test()
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Test
     public void testGetLeagueByIdNotFound() throws Exception {
 
         when(leagueService.getLeagueById(anyLong())).thenThrow(NotFoundException.class);
@@ -131,8 +149,6 @@ public class LeagueControllerTest {
 
     @Test()
     public void testGetLeagueByIdNumberFormatException() throws Exception {
-
-//        when(leagueService.getLeagueById(anyLong())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/league/asd/show"))
                 .andExpect(status().isBadRequest())

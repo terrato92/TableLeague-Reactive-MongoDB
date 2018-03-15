@@ -1,6 +1,7 @@
 package terrato.springframework.domain;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ public class League {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(name = "league_name")
     private String name;
 

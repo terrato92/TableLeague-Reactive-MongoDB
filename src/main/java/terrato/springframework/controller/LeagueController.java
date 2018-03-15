@@ -72,6 +72,7 @@ public class LeagueController {
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(leagueId)));
 
         model.addAttribute("nationalities", nationalityService.listAllNationalities());
+
         return "league/leagueform";
     }
 
@@ -89,5 +90,6 @@ public class LeagueController {
         return "redirect:/";
 
     }
+
 
 }

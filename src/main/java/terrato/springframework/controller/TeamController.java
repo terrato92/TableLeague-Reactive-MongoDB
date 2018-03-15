@@ -1,8 +1,10 @@
 package terrato.springframework.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import terrato.springframework.domain.League;
 import terrato.springframework.domain.Nationality;
@@ -12,9 +14,12 @@ import terrato.springframework.service.NationalityService;
 import terrato.springframework.service.PlayerService;
 import terrato.springframework.service.TeamService;
 
+import javax.validation.Valid;
+
 /**
  * Created by onenight on 2018-03-04.
  */
+@Slf4j
 @Controller
 public class TeamController {
 
@@ -83,8 +88,7 @@ public class TeamController {
 
     @GetMapping
     @RequestMapping("team/{teamId}/update")
-    public String updateLeagueTeam(
-                                   @PathVariable Long teamId, Model model) {
+    public String updateLeagueTeam(@PathVariable Long teamId, Model model) {
         model.addAttribute("team", teamService.findTeamById(teamId));
 
 
@@ -93,7 +97,18 @@ public class TeamController {
 
     @PostMapping
     @RequestMapping("league/{leagueId}/team")
-    public String saveOrUpdateTeam(@PathVariable Long leagueId, @ModelAttribute Team team) {
+    public String saveOrUpdateTeam(@PathVariable Long leagueId, @Valid @ModelAttribute ("team") Team team,
+                                   BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()){
+            League league = new League();
+            league.setId(leagueId);
+
+            team.setLeague(league);
+
+            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+            return "team/teamform";
+        }
 
         Team updateTeam = teamService.saveTeam(team, leagueId);
 
