@@ -19,3 +19,6 @@ After cloning the project you can import it to your IDE then run the "gradlew bu
 If everything works correctly, you can start the CRUD operations with following URL.
 
       http://localhost:9100 
+
+
+Application in continuous development
