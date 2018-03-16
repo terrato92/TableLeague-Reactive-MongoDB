@@ -1,7 +1,6 @@
 package terrato.springframework.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,15 +25,14 @@ public class TeamController {
     private final TeamService teamService;
     private final LeagueService leagueService;
     private final NationalityService nationalityService;
+    private final PlayerService playerService;
 
-    @Autowired
-    private PlayerService playerService;
 
-    @Autowired
-    public TeamController(TeamService teamService, LeagueService leagueService, NationalityService nationalityService) {
+    public TeamController(TeamService teamService, LeagueService leagueService, NationalityService nationalityService, PlayerService playerService) {
         this.teamService = teamService;
         this.leagueService = leagueService;
         this.nationalityService = nationalityService;
+        this.playerService = playerService;
     }
 
     @GetMapping
@@ -67,7 +65,6 @@ public class TeamController {
     @RequestMapping("league/{leagueId}/teams")
     public String getTeams(@PathVariable String leagueId, Model model) {
 
-
         model.addAttribute("teams", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
 
         return "league/team/list";
@@ -91,19 +88,17 @@ public class TeamController {
     public String updateLeagueTeam(@PathVariable Long teamId, Model model) {
         model.addAttribute("team", teamService.findTeamById(teamId));
 
-
         return "team/teamform";
     }
 
-    @PostMapping
-    @RequestMapping("league/{leagueId}/team")
+
+    @PostMapping("league/{leagueId}/team")
     public String saveOrUpdateTeam(@PathVariable Long leagueId, @Valid @ModelAttribute ("team") Team team,
                                    BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()){
             League league = new League();
             league.setId(leagueId);
-
             team.setLeague(league);
 
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
@@ -115,12 +110,10 @@ public class TeamController {
         return "redirect:/league/" + leagueId + "/show";
     }
 
+    @PostMapping
     @RequestMapping("team/{id}/delete")
     public String deleteById(@PathVariable String id) {
-        Team team = teamService.findTeamById(Long.valueOf(id));
-
-        Long idLeague = team.getLeague().getId();
-
+        Long idLeague = Long.valueOf(id);
         teamService.deleteTeam(Long.valueOf(id));
 
         return "redirect:/league/" + idLeague + "/show";

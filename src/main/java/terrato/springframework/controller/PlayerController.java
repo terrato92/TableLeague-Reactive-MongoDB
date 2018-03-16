@@ -68,12 +68,13 @@ public class PlayerController {
     @PostMapping
     @RequestMapping("team/{teamId}/player")
     public String saveOrUpdatePlayer(@PathVariable Long teamId, @Valid @ModelAttribute ("player") Player player,
-                                     BindingResult bindingResult) {
+                                     BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()){
+            model.addAttribute("nationalities", nationalityService.listAllNationalities());
+
             Team team = new Team();
             team.setId(teamId);
-
             player.setTeam(team);
 
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));

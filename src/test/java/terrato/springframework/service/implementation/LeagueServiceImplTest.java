@@ -5,15 +5,12 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import terrato.springframework.domain.League;
-import terrato.springframework.domain.Team;
+import terrato.springframework.exception.NotFoundException;
 import terrato.springframework.repository.LeagueRepository;
 import terrato.springframework.service.LeagueService;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -36,23 +33,9 @@ public class LeagueServiceImplTest {
         leagueService = new LeagueServiceImpl(leagueRepository);
     }
 
-    @Test
-    public void getLeaguesTest() throws Exception {
-        League league = new League();
-        league.setId(1L);
-
-        Set<League> leagues = new HashSet<>();
-        leagues.add(league);
-
-        when(leagueRepository.findAll()).thenReturn(leagues);
-
-        assertEquals(1, leagues.size());
-        verify(leagueRepository, never()).findOne(anyLong());
-
-    }
 
     @Test
-    public void getLeagueById() throws Exception {
+    public void testGetLeagueById() throws Exception {
         League league = new League();
         league.setId(2L);
 
@@ -70,36 +53,30 @@ public class LeagueServiceImplTest {
     }
 
     @Test
-    public void addLeague() throws Exception {
-        League newLegue = new League();
-        newLegue.setId(1L);
+    public void testAddLeague() throws Exception {
+        League newLeague = new League();
+        newLeague.setId(1L);
 
-        leagueRepository.save(newLegue);
-        verify(leagueRepository, times(1)).save(newLegue);
+        leagueRepository.save(newLeague);
+        verify(leagueRepository, times(1)).save(newLeague);
     }
 
     @Test
-    public void deleteLeagueById() throws Exception {
-        leagueRepository.delete(anyLong());
-
-        verify(leagueRepository, times(1)).delete(anyLong());
-    }
-
-
-    @Test
-    public void getLeagueTeamsTest(){
+    public void testDeleteLeagueById() throws Exception {
         League league = new League();
-        league.setId(1L);
-        league.addTeam(new Team());
-        Team team2 = new Team();
-        team2.setId(5L);
-        league.addTeam(team2);
+        league.setId(2L);
 
         when(leagueRepository.findOne(anyLong())).thenReturn(league);
 
-        assertEquals(2, leagueService.showLeagueTeams(league.getId()).size());
-
+        leagueService.deleteLeagueById(league.getId());
 
     }
 
+    @Test(expected = NotFoundException.class)
+    public void testGetLeagueByIdNotFound() throws Exception {
+        League league = leagueService.getLeagueById(1L);
+
+        when(leagueRepository.findOne(anyLong())).thenReturn(league);
+
+    }
 }

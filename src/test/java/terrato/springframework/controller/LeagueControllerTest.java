@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import terrato.springframework.domain.League;
@@ -15,6 +16,7 @@ import terrato.springframework.service.TeamService;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -40,7 +42,7 @@ public class LeagueControllerTest {
         MockitoAnnotations.initMocks(this);
 
         leagueController = new LeagueController(leagueService, teamService, nationalityService);
-        mockMvc = MockMvcBuilders.standaloneSetup(leagueController).setControllerAdvice(new ControllerExceptionController()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(leagueController).setControllerAdvice(new ControllerExceptionHandler()).build();
     }
 
     @Test
@@ -95,7 +97,9 @@ public class LeagueControllerTest {
 
         when(leagueService.getLeagueById(anyLong())).thenReturn(league);
 
-        mockMvc.perform(get("/league"))
+        mockMvc.perform(post("/league").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","")
+                .param("name", "pr"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 

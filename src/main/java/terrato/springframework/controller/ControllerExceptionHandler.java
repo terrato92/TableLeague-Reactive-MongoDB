@@ -13,7 +13,7 @@ import terrato.springframework.exception.NotFoundException;
  */
 @Slf4j
 @ControllerAdvice
-public class ControllerExceptionController {
+public class ControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NumberFormatException.class)

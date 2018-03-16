@@ -79,10 +79,12 @@ public class LeagueController {
 
     @PostMapping
     @RequestMapping("league")
-    public String saveOrUpdate(@Valid @ModelAttribute League league, BindingResult bindingResult){
+    public String saveOrUpdate(@Valid @ModelAttribute League league, BindingResult bindingResult, Model model){
 
         if (bindingResult.hasErrors()){
             bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+            model.addAttribute("nationalities", nationalityService.listAllNationalities());
+
             return "league/leagueform";
         }
 
