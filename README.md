@@ -4,7 +4,7 @@ This project contains simple CRUD operations on table league, teams and players.
 
 # Which Technologies We Will Use?
 
-Crud operations were performed using Spring Boot, H2 (Memory Based) Database and JSP.
+Crud operations were performed using Spring Boot, H2 (Memory Based) Database.
 
 Spring Boot was developed to be the fastest and easiest way to develop Spring based applications
 a framework. Thanks to Spring Boot, we can get rid of boilerplate code
