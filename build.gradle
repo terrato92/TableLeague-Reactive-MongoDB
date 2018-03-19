@@ -32,6 +32,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
 	compile("com.fasterxml.jackson.core:jackson-databind")
 	compile "org.springframework.boot:spring-boot-devtools:$springBootVersion"
 	runtime('com.h2database:h2')

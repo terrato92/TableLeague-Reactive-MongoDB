@@ -6,6 +6,7 @@ import lombok.Data;
  * Created by onenight on 2018-03-19.
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LeagueDto {
     private String name;
     private String league_slug;
