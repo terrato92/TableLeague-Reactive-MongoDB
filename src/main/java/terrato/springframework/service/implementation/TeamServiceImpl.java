@@ -7,7 +7,6 @@ import terrato.springframework.domain.League;
 import terrato.springframework.domain.Team;
 import terrato.springframework.exception.NotFoundException;
 import terrato.springframework.repository.LeagueRepository;
-import terrato.springframework.repository.NationalityRepository;
 import terrato.springframework.repository.TeamRepository;
 import terrato.springframework.service.TeamService;
 
@@ -24,18 +23,18 @@ public class TeamServiceImpl implements TeamService {
 
     private final LeagueRepository leagueRepository;
     private final TeamRepository teamRepository;
-    private final NationalityRepository nationalityRepository;
+    private final PointsServiceImpl pointsService;
 
-    public TeamServiceImpl(LeagueRepository leagueRepository, TeamRepository teamRepository, NationalityRepository nationalityRepository) {
+    public TeamServiceImpl(LeagueRepository leagueRepository, TeamRepository teamRepository, PointsServiceImpl pointsService) {
         this.leagueRepository = leagueRepository;
         this.teamRepository = teamRepository;
-        this.nationalityRepository = nationalityRepository;
+
+        this.pointsService = pointsService;
     }
 
 
-
     @Override
-    public Set<Team> findTeamByLeagueId(Long idLeague) {
+    public TreeSet<Team> findTeamByLeagueId(Long idLeague) {
         Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
 
         if (!leagueOptional.isPresent()) {
@@ -44,14 +43,22 @@ public class TeamServiceImpl implements TeamService {
 
         League league = leagueOptional.get();
 
-        return  league.getTeams();
+        Set<Team> teams = league.getTeams();
+
+        for (Team team : teams) {
+            pointsService.conversPoints(team);
+        }
+
+
+
+        return new TreeSet<Team>(teams);
     }
 
     @Override
     public Team findTeamById(Long idTeam) {
         Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
 
-        if (!teamOptional.isPresent()){
+        if (!teamOptional.isPresent()) {
             throw new NotFoundException("No team");
         } else {
             return teamOptional.get();
@@ -137,6 +144,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    @Deprecated
     public Set<Team> setTeamByPoints(Long idLeague) {
         Optional<League> league = Optional.ofNullable(leagueRepository.findOne(idLeague));
 

@@ -6,8 +6,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import terrato.springframework.domain.League;
 import terrato.springframework.domain.Team;
+import terrato.springframework.repository.BalanceOfMatchesRepository;
 import terrato.springframework.repository.LeagueRepository;
-import terrato.springframework.repository.NationalityRepository;
 import terrato.springframework.repository.TeamRepository;
 import terrato.springframework.service.LeagueService;
 import terrato.springframework.service.TeamService;
@@ -19,9 +19,7 @@ import java.util.Set;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by onenight on 2018-03-04.
@@ -35,13 +33,14 @@ public class TeamServiceImplTest {
     LeagueService leagueService;
 
     @Mock
-    NationalityRepository nationalityRepository;
-
-    @Mock
     LeagueRepository leagueRepository;
 
     @Mock
     TeamService teamService;
+
+
+    @Mock
+    BalanceOfMatchesRepository balanceOfMatchesRepository;
 
 
 
@@ -49,7 +48,7 @@ public class TeamServiceImplTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        teamService = new TeamServiceImpl(leagueRepository, teamRepository, nationalityRepository);
+        teamService = new TeamServiceImpl(leagueRepository, teamRepository, pointsService);
 
     }
 

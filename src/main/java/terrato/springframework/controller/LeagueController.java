@@ -21,7 +21,6 @@ public class LeagueController {
 
     private final LeagueService leagueService;
 
-
     private final TeamService teamService;
 
     private final NationalityService nationalityService;
@@ -45,6 +44,7 @@ public class LeagueController {
     @RequestMapping("league/{id}/show")
     public String showLeagueById(@PathVariable String id, Model model) {
         model.addAttribute("league", leagueService.getLeagueById(Long.valueOf(id)));
+
         model.addAttribute("teams", teamService.findTeamByLeagueId(Long.valueOf(id)));
 
         return "league/show";

@@ -12,7 +12,6 @@ import java.util.Set;
 public interface TeamService {
 
 
-
     Set<Team> findTeamByLeagueId(Long idLeague);
 
 

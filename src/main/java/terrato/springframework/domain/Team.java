@@ -28,7 +28,6 @@ public class Team implements Comparable<Team>{
     @NotBlank
     private String name;
 
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", fetch = FetchType.LAZY)
     private Set<Player> players = new HashSet<>();
 
@@ -55,7 +54,7 @@ public class Team implements Comparable<Team>{
 
     @Override
     public int compareTo(Team o) {
-        return this.getPoints() < o.getPoints() ? 1 : (this.getPoints() > o.getPoints() ? -1 : 0);
+        return this.getPoints() < o.getPoints() ? 1 : -1;
     }
 
     public Team addPlayer(Player player){
@@ -64,11 +63,4 @@ public class Team implements Comparable<Team>{
         return this;
     }
 
-    public Team(){
-
-    }
-
-    public Team(String name) {
-        this.name = name;
-    }
 }
