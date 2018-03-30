@@ -53,10 +53,6 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        League league = new League();
-        league.setName("Serie A");
-
-
         Nationality poland = new Nationality();
         poland.setNationality("England");
         nationalityRepository.save(poland);
@@ -64,6 +60,11 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         Nationality poland1 = new Nationality();
         poland1.setNationality("Polska");
         nationalityRepository.save(poland1);
+
+
+        League league = new League();
+        league.setNationality(poland);
+        league.setName("Serie A");
 
         Player player1 = new Player();
         player1.setNationality(poland);
