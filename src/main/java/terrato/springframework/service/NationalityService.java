@@ -1,13 +1,12 @@
 package terrato.springframework.service;
 
-import terrato.springframework.domain.Nationality;
-
-import java.util.Set;
+import reactor.core.publisher.Flux;
+import terrato.springframework.dto.NationalityDto;
 
 /**
  * Created by onenight on 2018-03-05.
  */
 public interface NationalityService {
 
-    Set<Nationality> listAllNationalities();
+    Flux<NationalityDto> listAllNationalities();
 }

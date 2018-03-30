@@ -1,20 +1,21 @@
 package terrato.springframework.service;
 
+import reactor.core.publisher.Mono;
 import terrato.springframework.domain.Player;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * Created by onenight on 2018-03-03.
  */
 public interface PlayerService {
 
-    Player getTeamPlayerById(Long idPlayer);
+    Mono<Player> getTeamPlayerById(String idPlayer);
 
-    Collection<Player> getPlayersFromTeam(Long idTeam);
+    Mono<Set<Player>> getPlayersFromTeam(String idTeam);
 
-    Player savePlayer(Player player, Long teamId);
+    Mono<Player> savePlayer(Player player, String teamId);
 
-    void deletePlayerFromTeam(Long idPlayer);
+    Mono<Void> deletePlayerFromTeam(String idPlayer);
 
 }

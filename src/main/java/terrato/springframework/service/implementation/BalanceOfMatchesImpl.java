@@ -1,9 +1,11 @@
 package terrato.springframework.service.implementation;
 
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 import terrato.springframework.domain.BalanceOfMatches;
 import terrato.springframework.domain.Team;
-import terrato.springframework.repository.BalanceOfMatchesRepository;
-import terrato.springframework.repository.TeamRepository;
+import terrato.springframework.repository.reactiveRepository.BalanceOfMatchesReactiveRepository;
+import terrato.springframework.repository.reactiveRepository.TeamReactiveRepository;
 import terrato.springframework.service.DefeatService;
 import terrato.springframework.service.DrawService;
 import terrato.springframework.service.WinService;
@@ -13,24 +15,26 @@ import java.util.Optional;
 /**
  * Created by onenight on 2018-03-04.
  */
+@Service
 public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinService {
 
-    private final TeamRepository teamRepository;
-    private final BalanceOfMatchesRepository balanceOfMatchesRepository;
+    private final TeamReactiveRepository teamRepository;
+    private final BalanceOfMatchesReactiveRepository balanceOfMatchesRepository;
 
 
-    public BalanceOfMatchesImpl(TeamRepository teamRepository, BalanceOfMatchesRepository balanceOfMatchesRepository) {
+    public BalanceOfMatchesImpl(TeamReactiveRepository teamRepository,
+                                BalanceOfMatchesReactiveRepository balanceOfMatchesRepository) {
+
         this.teamRepository = teamRepository;
         this.balanceOfMatchesRepository = balanceOfMatchesRepository;
     }
 
     @Override
-    public BalanceOfMatches winMatch(Long idTeam) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
+    public Mono<BalanceOfMatches> winMatch(String idTeam) {
+        Team team = teamRepository.findById(idTeam).block();
 
 
-        if (teamOptional.isPresent()) {
-            Team team = teamOptional.get();
+        if (team != null) {
 
             Optional<BalanceOfMatches> balanceOfMatchesOptional = Optional.ofNullable(team.getBalanceOfMatches());
 
@@ -41,7 +45,8 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
             team.setBalanceOfMatches(balanceOfMatches);
 
             teamRepository.save(team);
-            return balanceOfMatches;
+
+            return Mono.just(balanceOfMatches);
 
         } else {
             throw new RuntimeException("I can't find team with id: " + idTeam);
@@ -51,11 +56,10 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
     }
 
     @Override
-    public BalanceOfMatches drawMatch(Long idTeam) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
+    public Mono<BalanceOfMatches> drawMatch(String idTeam) {
+        Team team = teamRepository.findById(idTeam).block();
 
-        if (teamOptional.isPresent()) {
-            Team team = teamOptional.get();
+        if (team != null) {
 
             Optional<BalanceOfMatches> balanceOfMatchesOptional = Optional.ofNullable(team.getBalanceOfMatches());
 
@@ -67,7 +71,7 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
 
             teamRepository.save(team);
 
-            return balanceOfMatches;
+            return Mono.just(balanceOfMatches);
         } else {
             throw new RuntimeException("I can't find team with id: " + idTeam);
         }
@@ -75,12 +79,12 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
     }
 
     @Override
-    public BalanceOfMatches defeatMatch(Long idTeam) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
+    public Mono<BalanceOfMatches> defeatMatch(String idTeam) {
+
+        Team team = teamRepository.findById(idTeam).block();
 
 
-        if (teamOptional.isPresent()) {
-            Team team = teamOptional.get();
+        if (team != null) {
 
             Optional<BalanceOfMatches> balanceOfMatchesOptional = Optional.ofNullable(team.getBalanceOfMatches());
 
@@ -92,7 +96,7 @@ public class BalanceOfMatchesImpl implements DefeatService, DrawService, WinServ
 
             teamRepository.save(team);
 
-            return balanceOfMatches;
+            return Mono.just(balanceOfMatches);
 
         } else {
             throw new RuntimeException("I can't find team with id: " + idTeam);

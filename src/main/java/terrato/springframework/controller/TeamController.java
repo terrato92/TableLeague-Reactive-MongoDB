@@ -1,24 +1,25 @@
 package terrato.springframework.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import terrato.springframework.domain.League;
+import terrato.springframework.converter.TeamDtoToTeam;
+import terrato.springframework.converter.TeamToTeamDtoConvert;
 import terrato.springframework.domain.Nationality;
 import terrato.springframework.domain.Team;
+import terrato.springframework.dto.LeagueDto;
+import terrato.springframework.dto.TeamDto;
 import terrato.springframework.service.LeagueService;
 import terrato.springframework.service.NationalityService;
 import terrato.springframework.service.PlayerService;
 import terrato.springframework.service.TeamService;
 
-import javax.validation.Valid;
-
 /**
  * Created by onenight on 2018-03-04.
  */
-@Slf4j
 @Controller
 public class TeamController {
 
@@ -26,104 +27,98 @@ public class TeamController {
     private final LeagueService leagueService;
     private final NationalityService nationalityService;
     private final PlayerService playerService;
+    private final TeamToTeamDtoConvert teamToTeamDtoConvert;
+    private final TeamDtoToTeam teamDtoToTeam;
 
+    private WebDataBinder webDataBinder;
 
-    public TeamController(TeamService teamService, LeagueService leagueService, NationalityService nationalityService, PlayerService playerService) {
+    public TeamController(TeamService teamService, LeagueService leagueService, NationalityService nationalityService, PlayerService playerService, TeamToTeamDtoConvert teamToTeamDtoConvert, TeamDtoToTeam teamDtoToTeam) {
         this.teamService = teamService;
         this.leagueService = leagueService;
         this.nationalityService = nationalityService;
         this.playerService = playerService;
+        this.teamToTeamDtoConvert = teamToTeamDtoConvert;
+        this.teamDtoToTeam = teamDtoToTeam;
     }
 
-    @GetMapping
-    @RequestMapping("league/{leagueId}/team/new")
+    @InitBinder("team")
+    public void initBinder(WebDataBinder webDataBinder){
+        this.webDataBinder = webDataBinder;
+    }
+
+    @GetMapping("league/{leagueId}/team/new")
     public String newTeam(@PathVariable String leagueId, Model model) {
-        League league = new League();
-        league.setId(Long.valueOf(leagueId));
+
+        LeagueDto league = leagueService.getLeagueDtoById(leagueId).block();
 
         Team team = new Team();
-        team.setLeague(league);
-        model.addAttribute("team", team);
+        TeamDto teamDto = teamToTeamDtoConvert.convert(team);
+        teamDto.setLeagueId(league.getId());
+
+        model.addAttribute("team", teamDto);
 
         team.setNationality(new Nationality());
-        model.addAttribute("nationalities", nationalityService.listAllNationalities());
+        model.addAttribute("nationalities", nationalityService.listAllNationalities().collectList().block());
 
         return "team/teamform";
     }
 
-    @GetMapping
-    @RequestMapping("team/{teamId}/show")
-    public String getTeamById(@PathVariable String teamId, Model model){
-        model.addAttribute("team", teamService.findTeamById(Long.valueOf(teamId)));
-
-        model.addAttribute("players", playerService.getPlayersFromTeam(Long.valueOf(teamId)));
-
-        return "team/show";
-    }
-
-    @GetMapping
-    @RequestMapping("league/{leagueId}/teams")
+    @GetMapping("league/{leagueId}/teams")
     public String getTeams(@PathVariable String leagueId, Model model) {
 
-        model.addAttribute("teams", leagueService.showLeagueTeams(Long.valueOf(leagueId)));
+        model.addAttribute("teams", leagueService.showLeagueTeams(leagueId).block());
 
         return "league/team/list";
     }
 
-    @GetMapping
-    @RequestMapping("league/{leagueId}/team/{teamId}/show")
+    @GetMapping("league/{leagueId}/team/show")
     public String showLeagueTeamById(@PathVariable String leagueId,
                                      Model model) {
-        model.addAttribute("team", teamService.findTeamByLeagueId(Long.valueOf(leagueId)));
+        model.addAttribute("team", leagueService.showLeagueTeams(leagueId).block());
 
-        model.addAttribute("nationalities", nationalityService.listAllNationalities());
+//        model.addAttribute("nationalities", nationalityService.listAllNationalities().collectList().block());
 
 
-        return "league/team/list";
+        return "team/list";
     }
 
 
-    @GetMapping
-    @RequestMapping("team/{teamId}/update")
-    public String updateLeagueTeam(@PathVariable Long teamId, Model model) {
-        model.addAttribute("team", teamService.findTeamById(teamId));
+    @GetMapping("team/{teamId}/update")
+    public String updateLeagueTeam(@PathVariable String teamId, Model model) {
+        model.addAttribute("team", teamService.findTeamById(teamId).block());
 
         return "team/teamform";
     }
 
 
     @PostMapping("league/{leagueId}/team")
-    public String saveOrUpdateTeam(@PathVariable Long leagueId, @Valid @ModelAttribute ("team") Team team,
-                                   BindingResult bindingResult) {
+    public String saveOrUpdateTeam(@PathVariable String leagueId, @ModelAttribute("team") TeamDto teamDto) {
 
-        if (bindingResult.hasErrors()){
-            League league = new League();
-            league.setId(leagueId);
-            team.setLeague(league);
+        webDataBinder.validate();
 
-            bindingResult.getAllErrors().forEach(objectError -> log.debug(objectError.toString()));
+        BindingResult bindingResult = webDataBinder.getBindingResult();
+
+
+        if (bindingResult.hasErrors()) {
+            teamDto.setLeagueId(leagueId);
+
+            bindingResult.getAllErrors().forEach(ObjectError::toString);
             return "team/teamform";
         }
 
-        Team updateTeam = teamService.saveTeam(team, leagueId);
+        teamDto.setLeagueId(leagueId);
 
-        return "redirect:/league/" + leagueId + "/show";
+        TeamDto team = teamService.saveTeam(teamDto).block();
+        team.setLeagueId(leagueId);
+
+        return "redirect:/league/" +  team.getLeagueId() +  "/team/show";
     }
 
-    @PostMapping
-    @RequestMapping("team/{id}/delete")
+    @PostMapping("team/{id}/delete")
     public String deleteById(@PathVariable String id) {
         Long idLeague = Long.valueOf(id);
-        teamService.deleteTeam(Long.valueOf(id));
+        teamService.deleteTeam(id);
 
         return "redirect:/league/" + idLeague + "/show";
     }
-
-    @RequestMapping("league/{id}/sort")
-    public String sortLeague(@PathVariable String id, Model model) {
-        model.addAttribute("league_list", teamService.setTeamByPoints(Long.valueOf(id)));
-
-        return "league/show";
-    }
-
 }

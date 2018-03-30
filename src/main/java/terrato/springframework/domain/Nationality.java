@@ -1,19 +1,23 @@
 package terrato.springframework.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import java.util.UUID;
+
 
 /**
  * Created by onenight on 2018-03-05.
  */
-@Data
-@Entity
+@Getter
+@Setter
+@Document
 public class Nationality {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id = UUID.randomUUID().toString();
 
     private String nationality;
 

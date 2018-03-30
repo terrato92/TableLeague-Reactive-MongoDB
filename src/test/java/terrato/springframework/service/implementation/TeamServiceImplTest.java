@@ -4,22 +4,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Mono;
 import terrato.springframework.domain.League;
 import terrato.springframework.domain.Team;
-import terrato.springframework.repository.BalanceOfMatchesRepository;
-import terrato.springframework.repository.LeagueRepository;
-import terrato.springframework.repository.TeamRepository;
+import terrato.springframework.repository.reactiveRepository.LeagueReactiveRepository;
+import terrato.springframework.repository.reactiveRepository.TeamReactiveRepository;
 import terrato.springframework.service.LeagueService;
+import terrato.springframework.service.PointsService;
 import terrato.springframework.service.TeamService;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by onenight on 2018-03-04.
@@ -27,13 +26,13 @@ import static org.mockito.Mockito.*;
 public class TeamServiceImplTest {
 
     @Mock
-    TeamRepository teamRepository;
+    TeamReactiveRepository teamRepository;
 
     @Mock
     LeagueService leagueService;
 
     @Mock
-    LeagueRepository leagueRepository;
+    LeagueReactiveRepository leagueRepository;
 
     @Mock
     TeamService teamService;
@@ -42,104 +41,64 @@ public class TeamServiceImplTest {
     @Mock
     BalanceOfMatchesRepository balanceOfMatchesRepository;
 
+    @Mock
+    PointsService pointsService;
+
 
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        teamService = new TeamServiceImpl(leagueRepository, teamRepository, pointsService);
+        teamService = new TeamServiceImpl(leagueRepository, balanceOfMatchesRepository, teamToTeamConvert, balanceOfMatchesDtoToBalanceOfMatches, nationalityDto, teamRepository, pointsService);
 
     }
 
+    @Test
+    public void testFindyLeagueIdAndTeamId() throws Exception {
+        League league = getLeague();
+
+        Optional<League> leagueOptional = Optional.of(league);
+
+        when(leagueRepository.findById(anyString())).thenReturn(Mono.just(league));
+
+        Team team = teamService.findByLeagueIdAndTeamId("Seria A", "Napoli").block();
+
+        assertEquals("Napoli", team.getId());
+
+    }
+
+    private League getLeague() {
+        League league = new League();
+        league.setId("Seria A");
+
+        Team team1 = new Team();
+        team1.setId("Napoli");
+
+        Team team2 = new Team();
+        team2.setId("Juventus");
+
+        Team team3 = new Team();
+        team3.setId("Inter");
+
+        league.addTeam(team1);
+        league.addTeam(team2);
+        league.addTeam(team3);
+        return league;
+    }
 
     @Test
     public void testFindTeamById() throws Exception {
+
         Team team = new Team();
-        team.setId(2L);
+        team.setId("aa");
 
-        when(teamRepository.findOne(anyLong())).thenReturn(team);
+        when(teamRepository.findById(anyString())).thenReturn(Mono.just(team));
 
-        Team team1 = teamService.findTeamById(2L);
+        Team team1 = teamService.findTeamById("aa").block();
 
         assertNotNull(team1);
-        assertEquals(team.getId(), Long.valueOf(2L));
+        assertEquals(team.getId(), "aa");
 
     }
-
-
-    @Test
-    public void testSaveTeam() throws Exception {
-        Team team = new Team();
-        team.setId(1L);
-        League league = new League();
-        league.setId(2L);
-        team.setLeague(league);
-
-        Optional<League> leagueOptional = Optional.of(new League());
-
-        League saveLeague = new League();
-        saveLeague.setId(3L);
-        saveLeague.addTeam(team);
-        saveLeague.getTeams().iterator().next().setId(1L);
-
-        when(leagueRepository.findOne(anyLong())).thenReturn(leagueOptional.get());
-        when(leagueRepository.save((League) any())).thenReturn(saveLeague);
-
-        Team team1 = teamService.saveTeam(team, league.getId());
-
-        assertEquals(Long.valueOf(1L), team1.getId());
-        verify(leagueRepository, times(1)).findOne(anyLong());
-
-    }
-
-    @Test
-    public void deleteTeamFromLeague() throws Exception {
-        League league = new League();
-        league.setId(1L);
-        Team team = new Team();
-        team.setId(1L);
-        team.setLeague(league);
-        league.addTeam(team);
-
-        when(leagueService.getLeagueById(team.getLeague().getId())).thenReturn(team.getLeague());
-
-        assertEquals(1, league.getTeams().size());
-
-        teamService.deleteTeamFromLeague(team.getLeague().getId(), team.getId());
-
-        assertTrue(leagueService.showLeagueTeams(team.getLeague().getId()).isEmpty());
-    }
-
-
-    @Test
-    public void setTeamByPoints() throws Exception {
-        Team team1 = new Team();
-        team1.setId(1L);
-        team1.setName("Chelsea");
-        team1.setPoints(6);
-        Team team2 = new Team();
-        team1.setId(2L);
-        team2.setPoints(9);
-        team2.setName("Manchester");
-
-        Set<Team> teams = new HashSet<>();
-        teams.add(team1);
-        teams.add(team2);
-
-        League league = new League();
-        league.setId(3L);
-        league.setTeams(teams);
-
-        team1.setLeague(league);
-        team2.setLeague(league);
-
-        when(leagueRepository.findOne(anyLong())).thenReturn(league);
-
-        teamService.setTeamByPoints(league.getId());
-
-        assertEquals("Manchester", league.getTeams().iterator().next().getName());
-
-    }
-
 }

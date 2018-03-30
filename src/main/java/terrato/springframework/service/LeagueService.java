@@ -1,7 +1,10 @@
 package terrato.springframework.service;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import terrato.springframework.domain.League;
 import terrato.springframework.domain.Team;
+import terrato.springframework.dto.LeagueDto;
 
 import java.util.Set;
 
@@ -11,14 +14,18 @@ import java.util.Set;
 public interface LeagueService {
 
 
-    Set<League> getLeagues();
+    Flux<League> getLeagues();
 
-    League saveLeague(League league);
+    Mono<League> saveLeague(League league);
 
-    Set<Team> showLeagueTeams(Long idLeague);
+    Mono<LeagueDto> saveLeagueDto(LeagueDto leagueDto);
 
-    League getLeagueById(Long aLong);
+    Mono<Set<Team>> showLeagueTeams(String idLeague);
 
-    void deleteLeagueById(Long id);
+    Mono<League> getLeagueById(String idLeague);
+
+    Mono<LeagueDto> getLeagueDtoById(String idLegue);
+
+    Mono<Void> deleteLeagueById(String id);
 
 }

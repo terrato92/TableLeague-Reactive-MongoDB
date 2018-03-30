@@ -1,9 +1,9 @@
 package terrato.springframework.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import terrato.springframework.service.DefeatService;
 import terrato.springframework.service.DrawService;
 import terrato.springframework.service.TeamService;
@@ -12,6 +12,7 @@ import terrato.springframework.service.WinService;
 /**
  * Created by onenight on 2018-03-07.
  */
+@Controller
 public class BalanceOFMatchesController {
 
     private final TeamService teamService;
@@ -26,26 +27,23 @@ public class BalanceOFMatchesController {
         this.defeatService = defeatService;
     }
 
-    @PostMapping
-    @RequestMapping("team/{teamId}/win")
+    @PostMapping("team/{teamId}/win")
     public String winMatch(@PathVariable String teamId, Model model){
-        model.addAttribute("win", winService.winMatch(Long.valueOf(teamId)));
+        model.addAttribute("win", winService.winMatch(teamId).block());
 
         return "team/show";
     }
 
-    @PostMapping
-    @RequestMapping("team/{teamId}/draw")
+    @PostMapping("team/{teamId}/draw")
     public String drawMatch(@PathVariable String teamId, Model model){
-        model.addAttribute("win", drawService.drawMatch(Long.valueOf(teamId)));
+        model.addAttribute("win", drawService.drawMatch(teamId).block());
 
         return "team/show";
     }
 
-    @PostMapping
-    @RequestMapping("team/{teamId}/defeat")
+    @PostMapping("team/{teamId}/defeat")
     public String defeatMatch(@PathVariable String teamId, Model model){
-        model.addAttribute("win", defeatService.defeatMatch(Long.valueOf(teamId)));
+        model.addAttribute("win", defeatService.defeatMatch(teamId).block());
 
         return "team/show";
     }

@@ -1,18 +1,34 @@
 package terrato.springframework.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import terrato.springframework.domain.Power;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by onenight on 2018-03-19.
  */
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class TeamDto {
+
+
+    private String id;
     private String team;
-    private int wins;
-    private int draws;
-    private int losts;
+    private String leagueId;
+
+    private NationalityDto nationality;
+
+    private List<PlayerDto> players = new ArrayList<>();
+
+    private BalanceOfMatchesDto balanceOfMatches = new BalanceOfMatchesDto();
+
+    private Power power;
+
+    private Integer points;
+
 
 
 

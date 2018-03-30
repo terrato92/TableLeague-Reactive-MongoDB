@@ -1,17 +1,15 @@
 package terrato.springframework.service.implementation;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 import terrato.springframework.domain.Player;
 import terrato.springframework.domain.Team;
 import terrato.springframework.exception.NotFoundException;
-import terrato.springframework.repository.NationalityRepository;
-import terrato.springframework.repository.PlayerRepository;
-import terrato.springframework.repository.TeamRepository;
+import terrato.springframework.repository.reactiveRepository.NationalityReactiveRepository;
+import terrato.springframework.repository.reactiveRepository.PlayerReactiveRepository;
+import terrato.springframework.repository.reactiveRepository.TeamReactiveRepository;
 import terrato.springframework.service.PlayerService;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,14 +17,15 @@ import java.util.Set;
  * Created by onenight on 2018-03-03.
  */
 @Service
-@Slf4j
 public class PlayerServiceImpl implements PlayerService {
 
-    private final PlayerRepository playerRepository;
-    private final TeamRepository teamRepository;
-    private final NationalityRepository nationalityRepository;
+    private final PlayerReactiveRepository playerRepository;
+    private final TeamReactiveRepository teamRepository;
+    private final NationalityReactiveRepository nationalityRepository;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository, TeamRepository teamRepository, NationalityRepository nationalityRepository) {
+    public PlayerServiceImpl(PlayerReactiveRepository playerRepository,
+                             TeamReactiveRepository teamRepository,
+                             NationalityReactiveRepository nationalityRepository) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
 
@@ -35,37 +34,34 @@ public class PlayerServiceImpl implements PlayerService {
 
 
     @Override
-    public Collection<Player> getPlayersFromTeam(Long idTeam) {
-        Optional<Set<Player>> playerOptional = playerRepository.getAllByTeamId(idTeam);
+    public Mono<Set<Player>> getPlayersFromTeam(String idTeam) {
+        Mono<Set<Player>> player = playerRepository.findByTeamId(idTeam);
 
-        if (playerOptional.isPresent()) {
-            return playerOptional.get();
+        if (player != null) {
+            return player;
         } else {
-            log.error("Team with id: " + idTeam + " doesn't exist");
             throw new NotFoundException("I can't find team with id: " + idTeam);
         }
     }
 
     @Override
-    public Player getTeamPlayerById(Long idPlayer) {
-        Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(idPlayer));
+    public Mono<Player> getTeamPlayerById(String idPlayer) {
+        Player playerOptional = playerRepository.findById(idPlayer).block();
 
-        if (!playerOptional.isPresent()) {
-            throw new NotFoundException("Team doesn't exist");
+        if (playerOptional == null) {
+            throw new NotFoundException("Player doesn't exist");
         } else {
-            return playerOptional.get();
+            return Mono.just(playerOptional);
         }
     }
 
     @Override
-    @Transactional
-    public Player savePlayer(Player player, Long teamId) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(teamId));
+    public Mono<Player> savePlayer(Player player, String teamId) {
+        Team team = teamRepository.findById(teamId).block();
 
-        if (!teamOptional.isPresent()) {
+        if (team == null) {
             throw new NotFoundException("Team doesn't exist");
         } else {
-            Team team = teamOptional.get();
 
             Optional<Player> playerOptional = team
                     .getPlayers()
@@ -78,31 +74,25 @@ public class PlayerServiceImpl implements PlayerService {
                 player1.setTeam(team);
                 player1.setName(player.getName());
 
-                player1.setNationality(nationalityRepository.findOne(player.getNationality().getId()));
+                player1.setNationality(nationalityRepository.findById(player.getNationality().getId()).block());
 
                 player1.setAge(player.getAge());
                 player1.setPosition(player.getPosition());
-                return player1;
+                return Mono.just(player1);
 
             } else {
                 team.addPlayer(player);
                 player.setTeam(team);
 
-                return player;
+                return Mono.just(player);
             }
         }
     }
 
 
     @Override
-    public void deletePlayerFromTeam(Long idPlayer) {
-
-        Optional<Player> playerOptional = Optional.ofNullable(playerRepository.findOne(idPlayer));
-
-        if (!playerOptional.isPresent()) {
-            throw new NotFoundException("I can't find player");
-        } else {
-            playerRepository.delete(idPlayer);
+    public Mono<Void> deletePlayerFromTeam(String idPlayer) {
+            playerRepository.deleteById(idPlayer);
+            return Mono.empty();
         }
     }
-}

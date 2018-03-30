@@ -1,43 +1,35 @@
 package terrato.springframework.domain;
 
-import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by onenight on 2018-03-02.
  */
-@Data
-@Table
-@Entity
+@Getter
+@Setter
+@Document
 public class League {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id = UUID.randomUUID().toString();
 
-    @NotBlank
-    @Column(name = "league_name")
     private String name;
 
-    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "league", fetch = FetchType.LAZY)
     private Set<Team> teams = new HashSet<>();
 
-    @Lob
-    private Byte[] image;
-
-    @OneToOne
-    public Nationality nationality;
+    private Nationality nationality;
 
     public League addTeam(Team team){
-        team.setLeague(this);
-        teams.add(team);
+        this.teams.add(team);
         return this;
     }
 

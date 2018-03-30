@@ -1,21 +1,18 @@
 package terrato.springframework.domain;
 
 import lombok.Data;
-
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Created by onenight on 2018-03-02.
  */
 @Data
-@Table
-@Entity
+@Document
 public class BalanceOfMatches {
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private int wins = 0;
 
@@ -23,9 +20,4 @@ public class BalanceOfMatches {
 
     private int draws = 0;
 
-    public BalanceOfMatches() {
-        this.wins = 0;
-        this.defeats = 0;
-        this.draws = 0;
-    }
 }

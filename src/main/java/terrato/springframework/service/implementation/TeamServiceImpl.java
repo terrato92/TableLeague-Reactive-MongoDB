@@ -1,166 +1,131 @@
 package terrato.springframework.service.implementation;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
+import terrato.springframework.converter.BalanceOfMatchesDtoToBalanceOfMatches;
+import terrato.springframework.converter.NationalityDtoToNationality;
+import terrato.springframework.converter.TeamDtoToTeam;
+import terrato.springframework.converter.TeamToTeamDtoConvert;
 import terrato.springframework.domain.League;
 import terrato.springframework.domain.Team;
+import terrato.springframework.dto.TeamDto;
 import terrato.springframework.exception.NotFoundException;
-import terrato.springframework.repository.LeagueRepository;
-import terrato.springframework.repository.TeamRepository;
+import terrato.springframework.repository.reactiveRepository.LeagueReactiveRepository;
+import terrato.springframework.repository.reactiveRepository.TeamReactiveRepository;
+import terrato.springframework.service.PointsService;
 import terrato.springframework.service.TeamService;
 
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Created by onenight on 2018-03-03.
  */
 @Service
-@Slf4j
 public class TeamServiceImpl implements TeamService {
 
-    private final LeagueRepository leagueRepository;
-    private final TeamRepository teamRepository;
-    private final PointsServiceImpl pointsService;
+    private  final LeagueReactiveRepository leagueRepository;
+    private final TeamToTeamDtoConvert teamToTeamDtoConvert;
+    private final TeamDtoToTeam teamDtoToTeam;
+    private final BalanceOfMatchesDtoToBalanceOfMatches balanceOfMatchesDtoToBalanceOfMatches;
+    private final NationalityDtoToNationality nationalityDtoToNationality;
+    private final TeamReactiveRepository teamRepository;
 
-    public TeamServiceImpl(LeagueRepository leagueRepository, TeamRepository teamRepository, PointsServiceImpl pointsService) {
+    private final PointsService pointsService;
+
+    public TeamServiceImpl(LeagueReactiveRepository leagueRepository,
+                           TeamToTeamDtoConvert teamToTeamDtoConvert,
+                           TeamDtoToTeam teamDtoToTeam,
+                           BalanceOfMatchesDtoToBalanceOfMatches balanceOfMatchesDtoToBalanceOfMatches,
+                           NationalityDtoToNationality nationalityDtoToNationality,
+                           TeamReactiveRepository teamRepository,
+                           PointsService pointsService) {
+
         this.leagueRepository = leagueRepository;
+        this.teamToTeamDtoConvert = teamToTeamDtoConvert;
+        this.teamDtoToTeam = teamDtoToTeam;
+        this.balanceOfMatchesDtoToBalanceOfMatches = balanceOfMatchesDtoToBalanceOfMatches;
+        this.nationalityDtoToNationality = nationalityDtoToNationality;
         this.teamRepository = teamRepository;
-
         this.pointsService = pointsService;
     }
 
 
     @Override
-    public TreeSet<Team> findTeamByLeagueId(Long idLeague) {
-        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
+    public Mono<TeamDto> saveTeam(TeamDto sourceTeam) {
+        League league = leagueRepository.findById(sourceTeam.getLeagueId()).block();
 
-        if (!leagueOptional.isPresent()) {
-            log.error("League is not found!");
-        }
-
-        League league = leagueOptional.get();
-
-        Set<Team> teams = league.getTeams();
-
-        for (Team team : teams) {
-            pointsService.conversPoints(team);
-        }
-
-
-
-        return new TreeSet<Team>(teams);
-    }
-
-    @Override
-    public Team findTeamById(Long idTeam) {
-        Optional<Team> teamOptional = Optional.ofNullable(teamRepository.findOne(idTeam));
-
-        if (!teamOptional.isPresent()) {
-            throw new NotFoundException("No team");
-        } else {
-            return teamOptional.get();
-        }
-    }
-
-    @Override
-    @Transactional
-    public Team saveTeam(Team source, Long idLeague) {
-
-        Optional<League> leagueOptional = Optional.ofNullable((leagueRepository.findOne(idLeague)));
-
-        if (!leagueOptional.isPresent()) {
-            log.error("League with id " + source.getId() + " doesn't exist");
-            throw new NotFoundException("brak ligi");
+        if (league == null) {
+            return Mono.just(new TeamDto());
         } else {
 
-            League league = leagueOptional.get();
-
-            Optional<Team> teamOptional = league.getTeams().stream()
-                    .filter(team -> team.getId().equals(source.getId()))
+            Optional<Team> teamOptional = league
+                    .getTeams()
+                    .stream()
+                    .filter(team -> team.getId().equals(sourceTeam.getId()))
                     .findFirst();
 
             if (teamOptional.isPresent()) {
 
-                teamOptional.get().setName(source.getName());
-                teamOptional.get().setBalanceOfMatches(source.getBalanceOfMatches());
-                teamOptional.get().setLeague(league);
-                teamOptional.get().setPlayers(source.getPlayers());
-                teamOptional.get().setPoints(source.getPoints());
-                teamOptional.get().setPower(source.getPower());
-                teamOptional.get().setNationality(league.getNationality());
+                Team foundTeam = teamOptional.get();
 
-                return teamOptional.get();
+                foundTeam.setName(sourceTeam.getTeam());
+                foundTeam.setBalanceOfMatches(balanceOfMatchesDtoToBalanceOfMatches.convert(sourceTeam.getBalanceOfMatches()));
+                foundTeam.setPoints(sourceTeam.getPoints());
+                foundTeam.setPower(sourceTeam.getPower());
+                foundTeam.setNationality(nationalityDtoToNationality.convert(sourceTeam.getNationality()));
+
+//                return Mono.just(teamOptional.get());
 
             } else {
 
-                source.setLeague(league);
-                source.setNationality(league.getNationality());
-//                teamOptional.get().setBalanceOfMatches(new BalanceOfMatches());
-                teamRepository.save(source);
+                Team team = teamDtoToTeam.convert(sourceTeam);
+                league.addTeam(team);
 
-                return source;
             }
-        }
-    }
 
+            League savedLeague = leagueRepository.save(league).block();
 
-    @Override
-    @Transactional
-    public void deleteTeamFromLeague(Long idLeague, Long idTeam) {
-        Optional<League> leagueOptional = Optional.ofNullable(leagueRepository.findOne(idLeague));
-
-        if (leagueOptional.isPresent()) {
-            League league = leagueOptional.get();
-
-            Optional<Team> teamOptional = league.getTeams()
-                    .stream()
-                    .filter(team -> team.getId().equals(idTeam))
+            Optional<Team> savedTeamOptional = savedLeague.getTeams()
+                    .stream().filter(team -> team.getId().equalsIgnoreCase(sourceTeam.getId()))
                     .findFirst();
 
-            if (teamOptional.isPresent()) {
-                Team teamToDelete = teamOptional.get();
-                league.getTeams().remove(teamToDelete);
-                teamToDelete.setLeague(null);
-                teamRepository.delete(teamToDelete);
-                leagueRepository.save(league);
-            }
-        } else {
-            log.error("AWWWWAAARIAA ERROR");
-        }
+            TeamDto teamDtoSaved = teamToTeamDtoConvert.convert(savedTeamOptional.get());
+            teamDtoSaved.setLeagueId(league.getId());
 
-    }
-
-    @Override
-    public void deleteTeam(Long id) {
-        Optional<Team> teamToDelete = Optional.ofNullable(teamRepository.findOne(id));
-
-        if (!teamToDelete.isPresent()) {
-            log.error("Team with id: " + id + " doesn't exist");
-        } else
-            teamRepository.delete(teamToDelete.get());
-    }
-
-    @Override
-    @Deprecated
-    public Set<Team> setTeamByPoints(Long idLeague) {
-        Optional<League> league = Optional.ofNullable(leagueRepository.findOne(idLeague));
-
-        if (league.isPresent()) {
-            Set<Team> teamSet = league.get().getTeams();
-
-            TreeSet<Team> listTeamSort = new TreeSet<>(teamSet);
-            league.get().setTeams(listTeamSort);
-            leagueRepository.save(league.get());
-
-            return listTeamSort;
-        } else {
-            log.error("I can't find league with id: " + idLeague);
-            throw new NotFoundException("League doesn't exist");
+            return Mono.just(teamDtoSaved);
         }
     }
 
+    @Override
+    public Mono<Team> findTeamById(String idTeam) {
+        return teamRepository.findById(idTeam);
+    }
 
+    @Override
+    public Mono<TeamDto> findTeamDtoByLeagueIdAndTeamId(String idLeague, String idTeam) {
+
+        return leagueRepository
+                .findById(idLeague)
+                .flatMapIterable(league -> league.getTeams())
+                .filter(team -> team.getId().equalsIgnoreCase(idTeam))
+                .single()
+                .map(team -> {
+                    TeamDto teamDto = teamToTeamDtoConvert.convert(team);
+                    teamDto.setLeagueId(idLeague);
+
+                    return teamDto;
+                });
+    }
+
+    @Override
+    public Mono<Void> deleteTeam(String id) {
+        Team teamToDelete = teamRepository.findById(id).block();
+
+        if (teamToDelete == null) {
+            throw new NotFoundException();
+        } else {
+            teamRepository.delete(teamToDelete);
+            return Mono.empty();
+        }
+    }
 }

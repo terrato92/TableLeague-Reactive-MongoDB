@@ -1,5 +1,6 @@
 package terrato.springframework.service;
 
+import reactor.core.publisher.Mono;
 import terrato.springframework.domain.BalanceOfMatches;
 
 /**
@@ -7,5 +8,5 @@ import terrato.springframework.domain.BalanceOfMatches;
  */
 public interface WinService {
 
-    BalanceOfMatches winMatch(Long idTeam);
+    Mono<BalanceOfMatches> winMatch(String idTeam);
 }

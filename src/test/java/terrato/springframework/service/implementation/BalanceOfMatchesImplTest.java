@@ -4,16 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import terrato.springframework.domain.BalanceOfMatches;
+import reactor.core.publisher.Mono;
 import terrato.springframework.domain.Team;
-import terrato.springframework.repository.BalanceOfMatchesRepository;
-import terrato.springframework.repository.TeamRepository;
+import terrato.springframework.repository.reactiveRepository.BalanceOfMatchesReactiveRepository;
+import terrato.springframework.repository.reactiveRepository.TeamReactiveRepository;
 import terrato.springframework.service.DefeatService;
 import terrato.springframework.service.DrawService;
 import terrato.springframework.service.WinService;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -21,11 +21,13 @@ import static org.mockito.Mockito.when;
  */
 public class BalanceOfMatchesImplTest {
 
-    @Mock
-    TeamRepository teamRepository;
+    private static final String ID = "lech";
 
     @Mock
-    BalanceOfMatchesRepository balanceOfMatchesRepository;
+    TeamReactiveRepository teamRepository;
+
+    @Mock
+    BalanceOfMatchesReactiveRepository balanceOfMatchesRepository;
 
     DefeatService defeatService;
     WinService winService;
@@ -43,10 +45,9 @@ public class BalanceOfMatchesImplTest {
     @Test
     public void winMatch() throws Exception {
         Team team = new Team();
-        team.setId(1L);
-        team.setBalanceOfMatches(new BalanceOfMatches());
+        team.setId(ID);
 
-        when(teamRepository.findOne(anyLong())).thenReturn(team);
+        when(teamRepository.findById(anyString())).thenReturn(Mono.just(team));
 
         winService.winMatch(team.getId());
 
@@ -55,26 +56,23 @@ public class BalanceOfMatchesImplTest {
 
     @Test
     public void drawMatch() throws Exception {
-//        BalanceOfMatches balanceOfMatches = new BalanceOfMatches();
-//        balanceOfMatches.setBalance_id(1L);
-//        Team team = new Team();
-//        team.setId(1L);
-//        team.setBalanceOfMatches(balanceOfMatches);
-//
-//        when(teamRepository.findOne(anyLong())).thenReturn(team);
-//
-//        drawService.drawMatch(team.getId());
-//
-//        assertEquals(1, team.getBalanceOfMatches().getDraws());
+
+        Team team = new Team();
+        team.setId(ID);
+
+        when(teamRepository.findById(anyString())).thenReturn(Mono.just(team));
+
+        drawService.drawMatch(team.getId());
+
+        assertEquals(1, team.getBalanceOfMatches().getDraws());
     }
 
     @Test
     public void defeatMatch() throws Exception {
         Team team = new Team();
-        team.setId(1L);
-        team.setBalanceOfMatches(new BalanceOfMatches());
+        team.setId(ID);
 
-        when(teamRepository.findOne(anyLong())).thenReturn(team);
+        when(teamRepository.findById(anyString())).thenReturn(Mono.just(team));
 
         defeatService.defeatMatch(team.getId());
 

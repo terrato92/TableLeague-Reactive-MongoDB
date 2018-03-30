@@ -1,12 +1,11 @@
 package terrato.springframework.service.implementation;
 
 import org.springframework.stereotype.Service;
-import terrato.springframework.domain.Nationality;
-import terrato.springframework.repository.NationalityRepository;
+import reactor.core.publisher.Flux;
+import terrato.springframework.converter.NationalityToNationalityDto;
+import terrato.springframework.dto.NationalityDto;
+import terrato.springframework.repository.reactiveRepository.NationalityReactiveRepository;
 import terrato.springframework.service.NationalityService;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by onenight on 2018-03-05.
@@ -14,17 +13,18 @@ import java.util.Set;
 @Service
 public class NationalityServiceImpl implements NationalityService {
 
-    private final NationalityRepository nationalityRepository;
+    private final NationalityReactiveRepository nationalityRepository;
+    private final NationalityToNationalityDto nationalityToNationalityDto;
 
-    public NationalityServiceImpl(NationalityRepository nationalityRepository) {
+    public NationalityServiceImpl(NationalityReactiveRepository nationalityRepository, NationalityToNationalityDto nationalityToNationalityDto) {
         this.nationalityRepository = nationalityRepository;
+        this.nationalityToNationalityDto = nationalityToNationalityDto;
     }
 
     @Override
-    public Set<Nationality> listAllNationalities() {
-        Set<Nationality> nationalities = new HashSet<>();
-        nationalityRepository.findAll().forEach(nationalities::add);
-        return nationalities;
+    public Flux<NationalityDto> listAllNationalities() {
+
+        return nationalityRepository.findAll().map(nationality -> nationalityToNationalityDto.convert(nationality));
 
     }
 }

@@ -62,10 +62,10 @@
 
                                 <div class="col-md-3 form-group">
                                     <label>Nationality:</label>
-                                    <select class="form-control" th:field="*{nationality}">
-                                        <option th:each="nationality : ${nationalities}"
-                                                th:value="${nationality.getId()}"
-                                                th:text="${nationality.getNationality()}">
+                                    <select class="form-control" name="nationality.id">
+                                        <option th:each="nationalityEach : ${nationalities}"
+                                                th:value="${nationalityEach.getId()}"
+                                                th:text="${nationalityEach.getNationality()}">
                                         </option>
                                     </select>
                                 </div>

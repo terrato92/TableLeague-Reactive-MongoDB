@@ -1,10 +1,8 @@
 package terrato.springframework.service;
 
-import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 import terrato.springframework.domain.Team;
-
-import java.util.Collection;
-import java.util.Set;
+import terrato.springframework.dto.TeamDto;
 
 /**
  * Created by onenight on 2018-03-03.
@@ -12,18 +10,11 @@ import java.util.Set;
 public interface TeamService {
 
 
-    Set<Team> findTeamByLeagueId(Long idLeague);
+    Mono<TeamDto> saveTeam(TeamDto sourceTeam);
 
+    Mono<Void> deleteTeam(String id);
 
-    Team findTeamById(Long idTeam);
+    Mono<TeamDto> findTeamDtoByLeagueIdAndTeamId(String idLeague, String idTeam);
 
-    @Transactional
-    Team saveTeam(Team source, Long idLeague);
-
-    void deleteTeamFromLeague(Long idLeague, Long idTeam);
-
-    void deleteTeam(Long id);
-
-    Collection<Team> setTeamByPoints(Long idLeague);
-
+    Mono<Team> findTeamById(String idTeam);
 }
