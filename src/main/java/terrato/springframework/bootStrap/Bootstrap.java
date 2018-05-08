@@ -88,21 +88,21 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
 
 
-        log.error("####################");
+        log.info("####################");
 
-        log.error("Nationality Count: " + nationalityReactiveRepository.count().block().toString());
+        log.info("Nationality Count: " + nationalityReactiveRepository.count().block().toString());
 
-        log.error("####################");
+        log.info("####################");
 
-        log.error("Player Count: " + leagueReactiveRepository.count().block().toString());
+        log.info("Player Count: " + leagueReactiveRepository.count().block().toString());
 
-        log.error("####################");
+        log.info("####################");
 
-        log.error("Teams Count: " + teamReactiveRepository.count().block().toString());
+        log.info("Teams Count: " + teamReactiveRepository.count().block().toString());
 
-        log.error("####################");
+        log.info("####################");
 
-        log.error("Count: " + playerReactiveRepository.count().block().toString());
+        log.info("Count: " + playerReactiveRepository.count().block().toString());
 
 
 
